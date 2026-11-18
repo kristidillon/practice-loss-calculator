@@ -138,7 +138,7 @@ def wage_block(raw):
 
 
 def write_zips(geonames: Path):
-    exact = {}
+    seen = defaultdict(set)
     by_prefix = defaultdict(Counter)
     with geonames.open(encoding="utf-8") as handle:
         for line in handle:
@@ -154,8 +154,13 @@ def write_zips(geonames: Path):
                 code = "MIL"  # APO / FPO rows in this file have a blank state
             else:
                 code = "US"  # present in the file, no wage table (for example MH)
-            exact[postal] = code
+            seen[postal].add(code)
             by_prefix[postal[:3]][code] += 1
+    exact = {}
+    for postal, codes in seen.items():
+        states = codes - {"MIL", "US"}
+        # A base ZIP can also have a blank FPO row. Keep the state.
+        exact[postal] = next(iter(states)) if len(states) == 1 else (next(iter(codes)) if len(codes) == 1 else "US")
     # Fallback only when every ZIP in the prefix maps to one code.
     unanimous = {prefix: counts.most_common(1)[0][0] for prefix, counts in by_prefix.items() if len(counts) == 1}
     for zip_code, code in {"10001": "NY", "94105": "CA", "02139": "MA", "55401": "MN", "67202": "KS", "30303": "GA"}.items():

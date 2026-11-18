@@ -54,13 +54,14 @@ h3 { font-size: 17px; letter-spacing: -.02em; line-height: 1.3; }
   border-bottom: 1px solid var(--hair);
 }
 .nav .wrap { min-height: var(--nav); display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 10px; padding-bottom: 10px; }
-.brand { font-weight: 600; letter-spacing: -.02em; font-size: 14px; line-height: 1.25; max-width: 28ch; }
+.brand { font-weight: 600; letter-spacing: -.03em; font-size: 22px; line-height: 1; }
+.wordmark { font-weight: 650; }
 .nav-links { display: flex; gap: 22px; align-items: center; font-size: 14px; color: var(--ink-2); flex: none; }
 .nav-links a { transition: color .2s var(--ease); }
 .nav-links a:hover { color: var(--ink); }
 @media (max-width: 800px) {
-  .nav-links a:not(.btn) { display: none; }
-  .brand { font-size: 13px; max-width: 18ch; }
+  .nav-links { gap: 14px; font-size: 13px; }
+  .brand { font-size: 20px; }
 }
 
 .btn {
@@ -244,8 +245,12 @@ form.report { display: grid; gap: 8px; }
 .sources a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
 .sources ul { padding-left: 1.1em; display: grid; gap: 6px; }
 
-footer { padding: 32px 0 56px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--hair); }
+footer { padding: 32px 0 12px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--hair); }
 .foot { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+.footnote {
+  max-width: var(--max); margin: 8px auto 0; padding: 0 28px 36px;
+  font-size: 12px; line-height: 1.45; color: #8a8a8a;
+}
 
 .sticky {
   display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;

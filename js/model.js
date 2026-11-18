@@ -71,8 +71,11 @@
     var production = Math.max(0, num(input.productionPerHour));
     var daWage = Math.max(0, num(input.daWage));
     var hygWage = Math.max(0, num(input.hygWage));
+    var recWage = Math.max(0, num(input.receptionistWage));
     var remakeHours = Math.max(0, num(input.remakeHours));
     var asstRatio = Math.max(0, num(input.assistantPerChairHour));
+    var hygPerChair = Math.max(0, num(input.hygPerChairHour));
+    var recPerChair = Math.max(0, num(input.receptionistPerChairHour));
     var hygPerRemake = Math.max(0, num(input.hygHoursPerRemake));
     var hygPerSeat = Math.max(0, num(input.hygHoursPerSeat));
     var overheadPct = Math.max(0, num(input.overheadPct)) / 100;
@@ -93,15 +96,16 @@
 
     var lostProduction = coreChairHours * production;
     var assistantHours = coreChairHours * asstRatio;
-    var hygienistHours = remakesYear * hygPerRemake + unitsYear * hygPerSeat;
-    var staffCost = assistantHours * daWage + hygienistHours * hygWage;
+    var hygienistHours = coreChairHours * hygPerChair + remakesYear * hygPerRemake + unitsYear * hygPerSeat;
+    var receptionistHours = coreChairHours * recPerChair;
+    var staffCost = assistantHours * daWage + hygienistHours * hygWage + receptionistHours * recWage;
     var overheadBurn = coreChairHours * overheadPerHour;
     var labCost = remakesYear * labFee;
 
     var visits = turnaroundDays > extraAfter ? extraVisitsAsked : 0;
     var visitHours = extraMin / 60;
     var visitProductionEach = visits * visitHours * production;
-    var visitStaffEach = visits * (visitHours * asstRatio * daWage + hygPerExtra * hygWage);
+    var visitStaffEach = visits * (visitHours * asstRatio * daWage + visitHours * hygPerChair * hygWage + visitHours * recPerChair * recWage + hygPerExtra * hygWage);
     var visitOverheadEach = visits * visitHours * overheadPerHour;
     var carryEach = production * remakeHours * (turnaroundDays / 365) * carryRate;
     var turnaroundEach = tempCost + visitProductionEach + visitStaffEach + visitOverheadEach + carryEach;
@@ -121,6 +125,7 @@
       staffCost: staffCost,
       assistantHours: assistantHours,
       hygienistHours: hygienistHours,
+      receptionistHours: receptionistHours,
       overheadBurn: overheadBurn,
       labCost: labCost,
       visits: visits,

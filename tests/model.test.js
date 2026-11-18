@@ -88,6 +88,16 @@ assert.strictEqual(withFee.labCost, 24 * 100);
 const withHyg = annualLoss(Object.assign({}, base, { hygHoursPerRemake: 0.5, extraVisits: 0 }));
 assert.ok(Math.abs(withHyg.staffCost - (111 * 24.13 + 24 * 0.5 * 47.59)) < 1e-6);
 
+const team = annualLoss(Object.assign({}, base, {
+  extraVisits: 0,
+  daWage: 23.49,
+  hygWage: 45.14,
+  receptionistWage: 21.39,
+  hygPerChairHour: 1,
+  receptionistPerChairHour: 1
+}));
+assert.ok(Math.abs(team.staffCost - 111 * 90.02) < 1e-6);
+
 const scenario = annualLoss(scenarioInput(base));
 assert.ok(scenario.total < loss.total);
 assert.strictEqual(scenario.visits, 0);

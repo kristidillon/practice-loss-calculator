@@ -54,22 +54,43 @@
 
   function wageRecord() {
     var wages = DATA.wages;
-    if (region.code === "US" || region.code === "MIL") {
-      return { pack: wages.national, unpublished: false, national: true, name: region.code === "MIL" ? "U.S. military mail" : "the U.S." };
+    var national = wages.national;
+    if (region.code === "US" || region.code === "MIL" || !wages.states[region.code]) {
+      return {
+        hygienist: national.hygienist,
+        assistant: national.assistant,
+        receptionist: national.receptionist,
+        receptionistFromNational: region.code !== "US",
+        teamHour: national.teamHour,
+        teamPublished: true,
+        national: true,
+        name: region.code === "MIL" ? "U.S. military mail" : "the U.S."
+      };
     }
     var st = wages.states[region.code];
-    if (!st || st.unpublished) {
-      return { pack: wages.national, unpublished: true, national: true, name: st ? st.name : "this area" };
-    }
-    return { pack: { assistant: st.assistant, hygienist: st.hygienist }, unpublished: false, national: false, name: st.name };
+    var fromNational = st.receptionist == null;
+    var receptionist = fromNational ? national.receptionist : st.receptionist;
+    return {
+      hygienist: st.hygienist,
+      assistant: st.assistant,
+      receptionist: receptionist,
+      receptionistFromNational: fromNational,
+      teamHour: st.teamHour,
+      teamPublished: st.teamHour != null,
+      teamUsed: Math.round((st.hygienist + st.assistant + receptionist) * 100) / 100,
+      national: false,
+      name: st.name
+    };
   }
 
   function applyWages() {
     var rec = wageRecord();
-    state.daWage = rec.pack.assistant.mean;
-    state.hygWage = rec.pack.hygienist.mean;
+    state.daWage = rec.assistant;
+    state.hygWage = rec.hygienist;
+    state.receptionistWage = rec.receptionist;
     sync("daWage");
     sync("hygWage");
+    sync("receptionistWage");
   }
 
   function setProduction(value, mark) {
@@ -111,13 +132,13 @@
       : (state.productionPerHour === DATA.production.oneCaseStart
         ? "Production is still the $500 starting value."
         : "Production and overhead are U.S. figures. ADA does not publish them by state.");
-    if (rec.unpublished && region.code !== "US" && region.code !== "MIL") {
-      return place + ". BLS does not publish a May 2025 state estimate for these two occupations here, so the U.S. mean is filled in. " + prod;
+    if (region.code === "MIL" || (rec.national && region.code !== "US")) {
+      return place + ". No state wage row is used, so the U.S. May 2024 means are filled in. " + prod;
     }
-    if (region.code === "MIL") {
-      return "Military mail ZIP. No state wage is assigned, so the U.S. mean is filled in. " + prod;
+    if (rec.receptionistFromNational && !rec.national) {
+      return place + " wages, BLS OEWS May 2024. Receptionist is n/a here; the U.S. dental-office mean is used. " + prod;
     }
-    return place + " wages, BLS OEWS May 2025. " + prod;
+    return place + " wages, BLS OEWS May 2024. " + prod;
   }
 
   function lossNow() { return Model.annualLoss(state); }
@@ -211,10 +232,9 @@
 
     animateAnnual(now.total);
     $("outDayLine").textContent = "About " + money(now.monthly) + " a month, and about " + money(eq.perOfficeDay) + " an office day.";
-    $("outCrowns").textContent = "The chair time in adjustments and remakes is about " + fmt(eq.crownsOfChairTime, 0) + " crowns, at " + fmt(state.remakeHours, 2) + " hours each.";
+    $("outCrowns").textContent = "Chair time in adjustments and remakes: " + fmt(now.coreChairHours, 1) + " hours, " + money(now.lostProduction) + " of production — about " + fmt(eq.crownsOfChairTime, 0) + " crowns at " + fmt(state.remakeHours, 2) + " hours each.";
     $("outRegion").textContent = regionSentence();
     $("outMonthLine").innerHTML = "Every month at this pace, the estimate is about <b>" + money(now.monthly) + "</b>.";
-    $("stickyValue").textContent = money(now.total);
 
     if (now.visits > 0) {
       var visitDollars = now.visitProduction + now.visitStaff + now.visitOverhead;
@@ -239,13 +259,15 @@
     }
     $("prodMeta").textContent = prodNote;
 
-    var daMedian = rec.pack.assistant.median;
-    var hygMedian = rec.pack.hygienist.median;
-    var place = rec.unpublished && region.code !== "US" && region.code !== "MIL"
-      ? rec.name + " is not published. U.S. mean filled in."
-      : (rec.national ? "U.S. mean." : rec.name + " mean.");
-    $("daMeta").textContent = place + " Median " + (daMedian == null ? "not published" : wageText(daMedian)) + ". SOC 31-9091. Not a loaded wage.";
-    $("hygMeta").textContent = place + " Median " + (hygMedian == null ? "not published" : wageText(hygMedian)) + ". SOC 29-1292. Hours below start at 0. Assumption — enter your own.";
+    var place = rec.national ? "U.S. mean." : rec.name + " mean.";
+    $("daMeta").textContent = place + " SOC 31-9091, official May 2024 cross-industry mean hourly wage. Benefits are not included.";
+    $("hygMeta").textContent = place + " SOC 29-1292, official May 2024 cross-industry mean hourly wage. Benefits are not included.";
+    $("recMeta").textContent = rec.receptionistFromNational && !rec.national
+      ? "n/a for " + rec.name + " in the May 2024 Offices of Dentists research estimates. The U.S. mean " + wageText(DATA.wages.national.receptionist) + " is used."
+      : "SOC 43-4171. " + (rec.national ? "Official national mean for Offices of Dentists, NAICS 621200." : "May 2024 research estimate for Offices of Dentists, NAICS 621200.") + " Benefits are not included.";
+    $("teamLine").textContent = rec.teamPublished
+      ? "Team/hr, one of each: " + wageText(rec.teamHour) + ". Wages only."
+      : "Team/hr is n/a because the receptionist wage was not published. The estimate uses " + wageText(rec.teamUsed) + " (state hygienist + state assistant + U.S. receptionist).";
 
     $("overheadMeta").textContent = "Derived from ADA Tables 5 and 13: $" + DATA.overhead.expensesPerDentist.toLocaleString("en-US") + " expenses (excluding shareholder salaries) / $" + DATA.overhead.billingsPerDentist.toLocaleString("en-US") + " gross billings = " + DATA.overhead.percentRounded + "%. Not an ADA-published overhead rate, and not by state. At the ADA hourly average this is about " + money(DATA.overhead.perHourAtMeanBillings) + " per practice hour.";
 
@@ -271,7 +293,7 @@
     var rows = $("rows");
     rows.textContent = "";
     addRow(rows, "#0A7C86", "Lost production", "Adjustment and remake chair time, priced at production per hour.", now.lostProduction, now.lostProduction / 12);
-    addRow(rows, "#1D1D1F", "Staff wages", "Assistant time on that chair time, plus any hygienist hours you enter.", now.staffCost, now.staffCost / 12);
+    addRow(rows, "#1D1D1F", "Staff wages", "Hygienist, assistant, and receptionist time on the chair hours, at the wages above.", now.staffCost, now.staffCost / 12);
     addRow(rows, "#6E6E73", "Overhead", "The overhead percent applied to those same chair hours.", now.overheadBurn, now.overheadBurn / 12);
     addRow(rows, "#C7C7CC", "Lab remake fees", state.labFee > 0 ? "Your lab fee times remakes." : "Lab fee is $0 until you enter one. Assumption — enter your own.", now.labCost, now.labCost / 12);
     addRow(rows, "#3A3A3F", "Turnaround", "Temps, extra visits, and a carrying cost if you set a rate.", now.turnaroundCost, now.turnaroundCost / 12);
@@ -291,6 +313,10 @@
       : (diff > 0
         ? "About " + money(diff) + " less per year in this scenario."
         : "About " + money(-diff) + " more per year in this scenario.");
+    var prodGap = now.lostProduction - scenario.lostProduction;
+    $("outProdGap").textContent = Math.round(prodGap) === 0
+      ? "Production value tied to that chair time is the same in both."
+      : "Production tied to chair time is " + money(now.lostProduction) + " now and " + money(scenario.lostProduction) + " in this scenario — " + money(Math.abs(prodGap)) + (prodGap > 0 ? " less production lost." : " more production lost.");
 
     $("deltaDollars").textContent = money(original.dollars);
     $("deltaHours").textContent = fmt(original.chairHours, 0);
@@ -298,59 +324,7 @@
     $("deltaStaffHours").textContent = fmt(original.staffHoursYear, 0);
     $("deltaStaffCost").textContent = money(original.staffDollars);
     $("deltaMonth").textContent = "Every month, that gap is about " + money(original.monthly) + ".";
-    $("deltaCtaText").textContent = original.dollars >= 1
-      ? "Get back " + money(original.dollars) + "/yr — book a 30-min demo"
-      : "Book a 30-min demo";
     $("deltaFormula").textContent = fmt(original.yearly, 0) + " units a year × (" + fmt(state.remakePct, 1) + "% − " + fmt(state.targetRemakePct, 1) + "% remakes) = " + fmt(original.remakesAvoided, 0) + " remakes × " + fmt(state.remakeHours, 2) + " chair hours, plus " + fmt(state.adjustMin, 0) + " − " + fmt(state.targetAdjustMin, 0) + " minutes per unit at " + money(state.productionPerHour) + "/hour, plus " + fmt(state.staffHrs, 2) + " − " + fmt(state.targetStaffHrs, 2) + " chasing hours a week at " + money(state.staffWage) + "/hour.";
-
-    var mail = mailto(reportLines());
-    ["navMail", "resultMail", "deltaMail"].forEach(function (id) {
-      var node = $(id);
-      if (node) node.href = mail;
-    });
-  }
-
-  function reportLines(extra) {
-    var now = lossNow();
-    var scenario = lossScenario();
-    var original = Model.originalComparison(state);
-    var lines = [
-      "Dental Practice Production/Revenue Loss Calculator",
-      "",
-      "ZIP: " + (region.zip || "(none)"),
-      "Area: " + wageRecord().name,
-      "",
-      "Estimated annual loss: " + money(now.total),
-      "Per month: " + money(now.monthly),
-      "Lost production: " + money(now.lostProduction),
-      "Staff wages: " + money(now.staffCost),
-      "Overhead: " + money(now.overheadBurn),
-      "Lab fees: " + money(now.labCost),
-      "Turnaround: " + money(now.turnaroundCost),
-      "If staff is left inside overhead: " + money(now.withoutStaffOnTop),
-      "",
-      "Scenario annual loss: " + money(scenario.total),
-      "Scenario remake %: " + state.scenarioRemake,
-      "Scenario adjustment min: " + state.scenarioAdjust,
-      "Scenario turnaround days: " + state.scenarioTurnaround,
-      "",
-      "One-case comparison, chair + staff gap per year: " + money(original.dollars),
-      "",
-      "Units / month: " + state.units,
-      "Remake %: " + state.remakePct,
-      "Adjustment min: " + state.adjustMin,
-      "Production per hour: " + state.productionPerHour,
-      "Assistant wage: " + state.daWage,
-      "Hygienist wage: " + state.hygWage,
-      "Overhead %: " + state.overheadPct,
-      "This is an estimate from the page’s sources and the numbers entered. It is not a quote."
-    ];
-    if (extra) lines.push("", extra);
-    return lines.join("\r\n");
-  }
-
-  function mailto(body) {
-    return "mailto:kristi.dillon@meetdandy.com?subject=" + encodeURIComponent("Dental Practice Production/Revenue Loss Calculator") + "&body=" + encodeURIComponent(body);
   }
 
   function onField(el) {
@@ -479,25 +453,6 @@
     sync("remakeHours");
     paint();
   });
-
-  $("reportForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-    var extra = [
-      "Name: " + $("reportName").value.trim(),
-      "Email: " + $("reportEmail").value.trim(),
-      "Practice: " + $("reportPractice").value.trim()
-    ].join("\r\n");
-    var draft = mailto(reportLines(extra));
-    if (typeof window.__openMail === "function") window.__openMail(draft);
-    else window.location.href = draft;
-    $("reportStatus").textContent = "Your email draft should open now. Nothing was sent to a server.";
-  });
-
-  window.addEventListener("scroll", function () {
-    var on = window.scrollY > 520 && window.innerWidth <= 720;
-    $("sticky").classList.toggle("on", on);
-    document.body.classList.toggle("has-sticky", on);
-  }, { passive: true });
 
   fillStates();
   applyWages();

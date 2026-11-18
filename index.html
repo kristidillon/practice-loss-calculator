@@ -18,12 +18,11 @@
 <a class="skip" href="#result">Skip to the estimate</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top">Dental Practice Production/Revenue Loss Calculator</a>
+    <a class="brand wordmark" href="#top">Dandy</a>
     <nav class="nav-links" aria-label="Page">
       <a href="#breakdown">Breakdown</a>
       <a href="#area">Your area</a>
       <a href="#sources">Sources</a>
-      <a class="btn btn-dark btn-sm" id="navMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Get your full report</a>
     </nav>
   </div>
 </header>
@@ -98,10 +97,6 @@
           <div class="dot" aria-hidden="true"></div>
           <p id="outMonthLine">Every month at this pace, the estimate is about <b>$0</b>.</p>
         </div>
-        <div class="cta-row">
-          <a class="btn btn-accent btn-lg" href="#report">Get your full report</a>
-          <a class="calc-mail" id="resultMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Email this estimate</a>
-        </div>
       </div>
     </div>
   </section>
@@ -167,6 +162,7 @@
           </article>
         </div>
         <p class="diff" id="outDiff"></p>
+        <p class="note" id="outProdGap"></p>
       </div>
     </div>
   </section>
@@ -214,16 +210,22 @@
 
         <div class="stack">
           <h3>Wages</h3>
-          <span class="chip source">BLS OEWS, May 2025</span>
-          <div>
-            <label for="daWage">Dental assistant, mean hourly wage</label>
-            <div class="money-input"><span>$</span><input id="daWage" data-field="daWage" type="number" min="0" step="0.01" value="24.13" inputmode="decimal"></div>
-            <p class="hint" id="daMeta">SOC 31-9091. Straight-time wage, not loaded. Benefits are not included.</p>
-          </div>
+          <span class="chip source">BLS OEWS, May 2024</span>
+          <p class="hint" id="teamLine"></p>
           <div>
             <label for="hygWage">Dental hygienist, mean hourly wage</label>
-            <div class="money-input"><span>$</span><input id="hygWage" data-field="hygWage" type="number" min="0" step="0.01" value="47.59" inputmode="decimal"></div>
-            <p class="hint" id="hygMeta">SOC 29-1292. The wage is in the formula. Hours below start at 0 because no public figure says how long a hygienist spends on a remake.</p>
+            <div class="money-input"><span>$</span><input id="hygWage" data-field="hygWage" type="number" min="0" step="0.01" value="45.14" inputmode="decimal"></div>
+            <p class="hint" id="hygMeta">SOC 29-1292. Official cross-industry mean. Not a loaded wage.</p>
+          </div>
+          <div>
+            <label for="daWage">Dental assistant, mean hourly wage</label>
+            <div class="money-input"><span>$</span><input id="daWage" data-field="daWage" type="number" min="0" step="0.01" value="23.49" inputmode="decimal"></div>
+            <p class="hint" id="daMeta">SOC 31-9091. Official cross-industry mean. Not a loaded wage.</p>
+          </div>
+          <div>
+            <label for="receptionistWage">Receptionist, mean hourly wage</label>
+            <div class="money-input"><span>$</span><input id="receptionistWage" data-field="receptionistWage" type="number" min="0" step="0.01" value="21.39" inputmode="decimal"></div>
+            <p class="hint" id="recMeta">SOC 43-4171, Offices of Dentists (NAICS 621200). Not a loaded wage.</p>
           </div>
           <div class="pair">
             <div>
@@ -263,8 +265,19 @@
           <div>
             <label for="assistantPerChairHour">Assistant hours per chair hour</label>
             <input id="assistantPerChairHour" data-field="assistantPerChairHour" type="number" min="0" max="4" step="0.1" value="1" inputmode="decimal">
-            <p class="hint">Assumption — enter your own. Starts at 1, meaning an assistant is present for the chair time counted here.</p>
+            <p class="hint">Assumption — enter your own. Starts at 1.</p>
           </div>
+          <div class="pair">
+            <div>
+              <label for="hygPerChairHour">Hygienist hours per chair hour</label>
+              <input id="hygPerChairHour" data-field="hygPerChairHour" type="number" min="0" max="4" step="0.1" value="1" inputmode="decimal">
+            </div>
+            <div>
+              <label for="receptionistPerChairHour">Receptionist hours per chair hour</label>
+              <input id="receptionistPerChairHour" data-field="receptionistPerChairHour" type="number" min="0" max="4" step="0.1" value="1" inputmode="decimal">
+            </div>
+          </div>
+          <p class="hint">These three start at 1, so staff cost begins at Team/hr: one hygienist, one assistant, and one receptionist for each chair hour counted. Assumption — enter your own.</p>
           <div class="pair">
             <div>
               <label for="hygHoursPerRemake">Hygienist hours per remake</label>
@@ -275,7 +288,7 @@
               <input id="hygHoursPerSeat" data-field="hygHoursPerSeat" type="number" min="0" max="8" step="0.1" value="0" inputmode="decimal">
             </div>
           </div>
-          <p class="hint">Both start at 0. Assumption — enter your own.</p>
+          <p class="hint">Both start at 0. They add hours on top of hygienist hours per chair hour. Assumption — enter your own.</p>
         </div>
 
         <div class="stack">
@@ -381,37 +394,7 @@
         </div>
         <p class="hint" id="deltaFormula" style="margin-top:14px"></p>
         <p class="hint">These targets start where the one-case calculator starts. They are editable assumptions, not a predicted result. This comparison does not price turnover.</p>
-        <div class="cta-row">
-          <a class="btn btn-accent" id="deltaCta" href="https://calendly.com/kristi-dillon-meetdandy?utm_source=practice-loss-calculator&amp;utm_medium=landing&amp;utm_campaign=practice-loss&amp;utm_content=calc" target="_blank" rel="noopener"><span id="deltaCtaText">Book a 30-min demo</span></a>
-          <a class="calc-mail" id="deltaMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Email this estimate</a>
-        </div>
       </div>
-    </div>
-  </section>
-
-  <section id="report">
-    <div class="wrap report-grid">
-      <div>
-        <p class="eyebrow">Next step</p>
-        <h2>Get your full report.</h2>
-        <p class="lede" style="margin-top:14px">The form opens an email draft with this estimate. Nothing is sent to a server.</p>
-      </div>
-      <form class="report card" id="reportForm" action="#" method="post">
-        <div>
-          <label for="reportName">Name</label>
-          <input id="reportName" name="name" autocomplete="name" required>
-        </div>
-        <div>
-          <label for="reportEmail">Email</label>
-          <input id="reportEmail" name="email" type="email" autocomplete="email" required>
-        </div>
-        <div>
-          <label for="reportPractice">Practice</label>
-          <input id="reportPractice" name="practice" autocomplete="organization" required>
-        </div>
-        <button class="btn btn-accent btn-lg" type="submit">Get your full report</button>
-        <p class="status" id="reportStatus" role="status"></p>
-      </form>
     </div>
   </section>
 
@@ -423,8 +406,8 @@
       </div>
       <div class="sources">
         <div>
-          <h3>Wages — BLS OEWS, May 2025</h3>
-          <p>Dental assistants are SOC 31-9091. Dental hygienists are SOC 29-1292. OEWS does not publish dental assistants as 29-9093. State and U.S. mean and median hourly wages, all industries, were read from the BLS Public Data API on November 18, 2026 (state series OEUS, national series OEUN, datatype 03 for the mean and 08 for the median). They are straight-time wages, not loaded wages. Kansas has no published May 2025 state series for either occupation in that API, so the U.S. mean is filled in and labeled. <a href="https://www.bls.gov/oes/tables.htm">BLS OEWS tables</a>.</p>
+          <h3>Wages — BLS OEWS, May 2024</h3>
+          <p>Dental hygienists (SOC 29-1292) and dental assistants (SOC 31-9091) are official published mean hourly wages, cross-industry, for all 50 states and the District of Columbia. Receptionists (SOC 43-4171) are mean hourly wages for Offices of Dentists (NAICS 621200). State receptionist figures are May 2024 OEWS research estimates: BLS publishes them for research, they do not get every quality check of the standard release, and model error may be higher. The national receptionist figure is the official national industry mean, $21.39. Team/hr is one of each role. Wages only; benefits and payroll taxes are not included. Minnesota, Montana, and Vermont have no published dental-office receptionist wage, so Team/hr is n/a there and the estimate uses the U.S. receptionist mean, labeled as such. <a href="https://www.bls.gov/oes/tables.htm">BLS OEWS tables</a>. <a href="https://www.bls.gov/oes/oes_research_2024.htm">May 2024 research estimates</a>.</p>
         </div>
         <div>
           <h3>Production and hours — ADA Health Policy Institute, 2025</h3>
@@ -441,17 +424,17 @@
         </div>
         <div>
           <h3>ZIP codes</h3>
-          <p>GeoNames postal codes, CC BY 4.0, U.S. file. <a href="https://www.geonames.org/">geonames.org</a>. A ZIP maps to a state, then to that state’s OEWS wages. It is not a ZIP-level wage. Military mail entries in that file have no state, so the page uses U.S. means. Puerto Rico is in the BLS wage file and in the state list; it is not in the GeoNames U.S. extract used here.</p>
+          <p>GeoNames postal codes, CC BY 4.0, U.S. file. <a href="https://www.geonames.org/">geonames.org</a>. A ZIP maps to a state, then to that state’s OEWS wages. It is not a ZIP-level wage. Military mail entries in that file have no state, so the page uses U.S. means. Puerto Rico is not in this wage file. Two Hawaii ZIP codes that also appear as military mail, 96860 and 96863, map to Hawaii.</p>
         </div>
         <div>
-          <h3>The one-case calculator</h3>
-          <p>The comparison formula and the slider ranges are ported from <a href="https://kristidillon.github.io/one-case/#cost">the one-case page</a>. Its line about a 5–10% industry average is not repeated here; this page did not find a public source for that range.</p>
+          <h3>Comparison formula</h3>
+          <p>The lower comparison prices the gap in remake rate, adjustment minutes, and chasing hours. It does not include overhead, lab fees, or turnaround. A 5–10% industry-average remake line is not used here; this page did not find a public source for that range.</p>
         </div>
         <div>
           <h3>Marked “assumption — enter your own”</h3>
           <ul>
             <li>Adjustment minutes, prep minutes, seat minutes, and chair hours per remake.</li>
-            <li>Assistant hours per chair hour, and hygienist hours (those start at 0).</li>
+            <li>Assistant, hygienist, and receptionist hours per chair hour start at 1, which is Team/hr. Extra hygienist hours per remake and per seat start at 0.</li>
             <li>Lab fee per remake and temp cost (both start at $0).</li>
             <li>Extra visits (starts at 1), the day threshold (7), and minutes per extra visit (20).</li>
             <li>Carrying rate (starts at 0, so the queue of billings is shown and not added).</li>
@@ -469,12 +452,8 @@
     <div>Dental Practice Production/Revenue Loss Calculator</div>
     <div>Estimates use the sources above and the numbers you enter.</div>
   </div>
+  <p class="footnote">Averages: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</p>
 </footer>
-
-<div class="sticky" id="sticky">
-  <div><small>Estimated loss / year</small><b id="stickyValue">$0</b></div>
-  <a class="btn btn-accent btn-sm" href="#report">Get your full report</a>
-</div>
 
 <noscript><p class="wrap">This estimate needs JavaScript. The page is still a single file you can open locally once JavaScript is available.</p></noscript>
 <script src="js/data.js"></script>

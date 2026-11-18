@@ -2,7 +2,7 @@
 
 A static estimate of what adjustments, remakes, staff time, overhead, and lab turnaround cost a dental practice. It runs entirely in the browser. Open `index.html` directly, or host the repository root on GitHub Pages.
 
-The report form opens an email draft. It does not submit anywhere, and the page does not show the recipient’s name.
+The page is a general information tool. It has no email link, no meeting link, and no lead form. The header is the Dandy wordmark.
 
 ## Use it
 
@@ -42,7 +42,7 @@ Billings sitting in the queue (units per month × turnaround days / 30 × produc
 
 Staff wages also sit inside the expense total used for the overhead percent, so the headline counts payroll on these hours twice. The page shows the total with staff left inside overhead as well.
 
-The one-case block is a separate formula, ported from [the one-case calculator](https://kristidillon.github.io/one-case/#cost):
+A lower block prices only the gap in remake rate, adjustment minutes, and chasing hours:
 
 ```
 units × 12 × (remake% − target remake%) / 100 × chair hours per remake
@@ -57,18 +57,17 @@ Figures are not invented. Where no public number exists, the field is labeled **
 
 ### Wages
 
-U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, **May 2025**.
+U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, **May 2024**. The numbers are in `data/may2024-wages.json`.
 
-- Dental assistants: SOC **31-9091**. OEWS does not publish this occupation as 29-9093.
-- Dental hygienists: SOC **29-1292**.
+- Dental hygienists, SOC **29-1292**, and dental assistants, SOC **31-9091**: official mean hourly wages, cross-industry (`state_M2024_dl.xlsx` and `national_M2024_dl.xlsx`).
+- Receptionists, SOC **43-4171**: state means for Offices of Dentists, NAICS **621200**, from the May 2024 OEWS research estimates (`oes_research_2024_sec_62.xlsx`). The national receptionist mean, **$21.39**, is the official national industry figure in `nat4d_M2024_dl.xlsx`.
+- Team/hr is one hygienist, one assistant, and one receptionist. Wages only.
 
-State and national **mean** (datatype 03) and **median** (datatype 08) hourly wages, all industries, from the [BLS Public Data API](https://www.bls.gov/developers/), retrieved November 18, 2026. State series use `OEUS` plus the state area code (`SS00000`). The U.S. series uses `OEUN` and area `0000000`. These are straight-time wages, not loaded wages, and they do not include benefits.
+Minnesota, Montana, and Vermont have no published dental-office receptionist wage. Team/hr is n/a for those states. The estimate fills the U.S. receptionist mean and says so.
 
-Kansas has no published May 2025 state series for either occupation in that API. The page fills the U.S. mean and says so.
+Tables: [bls.gov/oes/tables.htm](https://www.bls.gov/oes/tables.htm). Research estimates: [oes_research_2024.htm](https://www.bls.gov/oes/oes_research_2024.htm).
 
-Tables: [bls.gov/oes/tables.htm](https://www.bls.gov/oes/tables.htm).
-
-Checked against the published medians for Alabama ($18.79), Minnesota ($31.38), and the U.S. ($23.11 assistant, $47.16 hygienist).
+Checked on November 18, 2026 against those files (Wayback copies of the May 2024 release). Hygienist and assistant means matched all 50 states and D.C. Receptionist means matched every published state. National receptionist $21.39 matched. No wage in the sheet was changed. Two Hawaii ZIP codes that also have a blank military-mail row, 96860 and 96863, now map to Hawaii. ADA Tables 5, 9, 13, and 19 were re-read from the 2026 Survey of Dental Practice workbook; the production, hours, and overhead figures were already the published ones.
 
 ### Production, hours, and overhead
 
@@ -102,7 +101,7 @@ The remake field starts at **8%** and units at **25** because those are the one-
 
 ### One-case calculator
 
-Inputs, the comparison formula, and slider ranges are ported from [the one-case page](https://kristidillon.github.io/one-case/#cost) ([source](https://github.com/kristidillon/one-case)). The type is the system font stack. The accent is `#0A7C86`.
+The comparison formula and slider ranges follow the earlier calculator. The type is the system font stack. The accent is `#0A7C86`. The header wordmark is the word Dandy.
 
 ## Assumptions
 
@@ -135,12 +134,6 @@ python3 scripts/build_data.py --geonames /path/to/US.txt
 That calls the BLS API. Pass `--wages-json` to reuse a file already shaped like the API result (`assistant`/`hygienist` or `da`/`hyg`, with `mean` and `median`). The script checks a few published medians before it writes. Commit the regenerated `js/data.js` and `js/zips.js`.
 
 `node tests/model.test.js` checks the one-case formula at its starting values ($43,596 a year) and the loss components.
-
-## Report form
-
-The form’s `action` is `#`. Submit opens a `mailto:` draft. It does not post to a form service, and this repository does not send test entries anywhere.
-
-**TODO:** if these reports should be stored, replace the mailto handoff in `js/app.js` (`reportForm` submit handler) with an endpoint you control. Until that exists, leave the handler as a mailto draft.
 
 ## Page shape
 
