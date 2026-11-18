@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How much are remakes costing your practice?</title>
-<meta name="description" content="Estimate what adjustments, remakes, staff time, overhead, and lab turnaround cost a dental practice. Enter a U.S. ZIP for state wages. Every figure is an estimate you can edit.">
+<title>Dental Practice Production/Revenue Loss Calculator</title>
+<meta name="description" content="Dental Practice Production/Revenue Loss Calculator. Estimate what adjustments, remakes, staff time, overhead, and lab turnaround cost a practice. Enter a U.S. ZIP for state wages.">
+<meta property="og:title" content="Dental Practice Production/Revenue Loss Calculator">
+<meta property="og:description" content="Estimate lost production, staff cost, overhead, and lab turnaround from the numbers you enter.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dental Practice Production/Revenue Loss Calculator">
+<meta name="twitter:description" content="Estimate lost production, staff cost, overhead, and lab turnaround from the numbers you enter.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -12,12 +18,12 @@
 <a class="skip" href="#result">Skip to the estimate</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top">Kristi Dillon <span>Practice loss</span></a>
+    <a class="brand" href="#top">Dental Practice Production/Revenue Loss Calculator</a>
     <nav class="nav-links" aria-label="Page">
       <a href="#breakdown">Breakdown</a>
       <a href="#area">Your area</a>
       <a href="#sources">Sources</a>
-      <a class="btn btn-dark btn-sm" id="navMail" href="mailto:kristi.dillon@meetdandy.com?subject=Practice%20loss%20estimate">Talk to Kristi</a>
+      <a class="btn btn-dark btn-sm" id="navMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Get your full report</a>
     </nav>
   </div>
 </header>
@@ -27,7 +33,7 @@
     <div class="wrap opening">
       <div>
         <p class="eyebrow">A practice estimate</p>
-        <h1>How much are remakes really costing your practice?</h1>
+        <h1>Dental Practice Production/Revenue Loss Calculator</h1>
         <p class="lede">Enter a ZIP code. State wages fill in from published figures. You set the case volume. The annual number is an estimate — chair time, staff, overhead, and the wait on the lab.</p>
 
         <form id="zipForm" action="#result">
@@ -93,8 +99,8 @@
           <p id="outMonthLine">Every month at this pace, the estimate is about <b>$0</b>.</p>
         </div>
         <div class="cta-row">
-          <a class="btn btn-accent btn-lg" href="#report">Get your full practice report</a>
-          <a class="calc-mail" id="resultMail" href="mailto:kristi.dillon@meetdandy.com?subject=Practice%20loss%20estimate">Talk to Kristi</a>
+          <a class="btn btn-accent btn-lg" href="#report">Get your full report</a>
+          <a class="calc-mail" id="resultMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Email this estimate</a>
         </div>
       </div>
     </div>
@@ -111,10 +117,10 @@
         <div class="bars" id="bars"></div>
         <div class="legend" aria-hidden="true">
           <span><b style="background:#0A7C86"></b>Lost production</span>
-          <span><b style="background:#5FC6CE"></b>Staff wages</span>
-          <span><b style="background:#1D1D1F"></b>Overhead</span>
-          <span><b style="background:#8E8E93"></b>Lab fees</span>
-          <span><b style="background:#B42318"></b>Turnaround</span>
+          <span><b style="background:#1D1D1F"></b>Staff wages</span>
+          <span><b style="background:#6E6E73"></b>Overhead</span>
+          <span><b style="background:#C7C7CC"></b>Lab fees</span>
+          <span><b style="background:#3A3A3F"></b>Turnaround</span>
         </div>
         <div class="rows" id="rows"></div>
         <p class="note" id="overlapNote"></p>
@@ -344,7 +350,7 @@
         <p class="lede">This is the original calculator. It prices the gap between your remake rate, adjustment time, and chasing hours and the lower targets below. It does not include overhead, lab fees, or turnaround.</p>
       </div>
       <div class="delta rv">
-        <div class="lbl" style="letter-spacing:.08em;text-transform:uppercase;font-size:13px;font-weight:600;color:var(--night-muted)">Chair + staff time, per year, at your targets</div>
+        <div class="lbl">Chair + staff time, per year, at your targets</div>
         <div class="delta-num" id="deltaDollars">$0</div>
         <p class="hint">From remakes you’d avoid, minutes back at the seat, and staff hours no longer spent chasing a case — at your own numbers.</p>
         <div class="stats night-stats">
@@ -377,7 +383,7 @@
         <p class="hint">These targets start where the one-case calculator starts. They are editable assumptions, not a predicted result. This comparison does not price turnover.</p>
         <div class="cta-row">
           <a class="btn btn-accent" id="deltaCta" href="https://calendly.com/kristi-dillon-meetdandy?utm_source=practice-loss-calculator&amp;utm_medium=landing&amp;utm_campaign=practice-loss&amp;utm_content=calc" target="_blank" rel="noopener"><span id="deltaCtaText">Book a 30-min demo</span></a>
-          <a class="calc-mail" id="deltaMail" href="mailto:kristi.dillon@meetdandy.com?subject=Practice%20loss%20estimate">Send these numbers to Kristi</a>
+          <a class="calc-mail" id="deltaMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Email this estimate</a>
         </div>
       </div>
     </div>
@@ -387,9 +393,8 @@
     <div class="wrap report-grid">
       <div>
         <p class="eyebrow">Next step</p>
-        <h2>Get your full practice report.</h2>
-        <p class="lede" style="margin-top:14px">Kristi Dillon is an account executive at Dandy. The form opens an email draft to her with the estimate. Nothing is sent to a server.</p>
-        <p class="hint" style="margin-top:16px">kristi.dillon@meetdandy.com<br>Direct: <a class="linkish" href="tel:+18454239166">845-423-9166</a><br>Text CROWN to 845-423-9166</p>
+        <h2>Get your full report.</h2>
+        <p class="lede" style="margin-top:14px">The form opens an email draft with this estimate. Nothing is sent to a server.</p>
       </div>
       <form class="report card" id="reportForm" action="#" method="post">
         <div>
@@ -404,7 +409,7 @@
           <label for="reportPractice">Practice</label>
           <input id="reportPractice" name="practice" autocomplete="organization" required>
         </div>
-        <button class="btn btn-accent btn-lg" type="submit">Get your full practice report</button>
+        <button class="btn btn-accent btn-lg" type="submit">Get your full report</button>
         <p class="status" id="reportStatus" role="status"></p>
       </form>
     </div>
@@ -440,7 +445,7 @@
         </div>
         <div>
           <h3>The one-case calculator</h3>
-          <p>The comparison formula, the slider ranges, and the teal-and-ink palette are ported from <a href="https://kristidillon.github.io/one-case/#cost">the one-case page</a>. Its line about a 5–10% industry average is not repeated here; this page did not find a public source for that range.</p>
+          <p>The comparison formula and the slider ranges are ported from <a href="https://kristidillon.github.io/one-case/#cost">the one-case page</a>. Its line about a 5–10% industry average is not repeated here; this page did not find a public source for that range.</p>
         </div>
         <div>
           <h3>Marked “assumption — enter your own”</h3>
@@ -461,18 +466,14 @@
 
 <footer>
   <div class="wrap foot">
-    <div>
-      <strong style="color:var(--ink)">Kristi Dillon, BS, RDH</strong><br>
-      Account Executive, Dandy<br>
-      <a href="mailto:kristi.dillon@meetdandy.com">kristi.dillon@meetdandy.com</a>
-    </div>
+    <div>Dental Practice Production/Revenue Loss Calculator</div>
     <div>Estimates use the sources above and the numbers you enter.</div>
   </div>
 </footer>
 
 <div class="sticky" id="sticky">
   <div><small>Estimated loss / year</small><b id="stickyValue">$0</b></div>
-  <a class="btn btn-accent btn-sm" href="#report">Get your report</a>
+  <a class="btn btn-accent btn-sm" href="#report">Get your full report</a>
 </div>
 
 <noscript><p class="wrap">This estimate needs JavaScript. The page is still a single file you can open locally once JavaScript is available.</p></noscript>
