@@ -126,10 +126,10 @@
   function bar(loss) {
     var parts = [
       [loss.lostProduction, "#0A7C86"],
-      [loss.staffCost, "#5FC6CE"],
-      [loss.overheadBurn, "#1D1D1F"],
-      [loss.labCost, "#8E8E93"],
-      [loss.turnaroundCost, "#B42318"]
+      [loss.staffCost, "#1D1D1F"],
+      [loss.overheadBurn, "#6E6E73"],
+      [loss.labCost, "#C7C7CC"],
+      [loss.turnaroundCost, "#3A3A3F"]
     ];
     var total = parts.reduce(function (sum, part) { return sum + part[0]; }, 0);
     var weights = parts.map(function (part) {
@@ -271,10 +271,10 @@
     var rows = $("rows");
     rows.textContent = "";
     addRow(rows, "#0A7C86", "Lost production", "Adjustment and remake chair time, priced at production per hour.", now.lostProduction, now.lostProduction / 12);
-    addRow(rows, "#5FC6CE", "Staff wages", "Assistant time on that chair time, plus any hygienist hours you enter.", now.staffCost, now.staffCost / 12);
-    addRow(rows, "#1D1D1F", "Overhead", "The overhead percent applied to those same chair hours.", now.overheadBurn, now.overheadBurn / 12);
-    addRow(rows, "#8E8E93", "Lab remake fees", state.labFee > 0 ? "Your lab fee times remakes." : "Lab fee is $0 until you enter one. Assumption — enter your own.", now.labCost, now.labCost / 12);
-    addRow(rows, "#B42318", "Turnaround", "Temps, extra visits, and a carrying cost if you set a rate.", now.turnaroundCost, now.turnaroundCost / 12);
+    addRow(rows, "#1D1D1F", "Staff wages", "Assistant time on that chair time, plus any hygienist hours you enter.", now.staffCost, now.staffCost / 12);
+    addRow(rows, "#6E6E73", "Overhead", "The overhead percent applied to those same chair hours.", now.overheadBurn, now.overheadBurn / 12);
+    addRow(rows, "#C7C7CC", "Lab remake fees", state.labFee > 0 ? "Your lab fee times remakes." : "Lab fee is $0 until you enter one. Assumption — enter your own.", now.labCost, now.labCost / 12);
+    addRow(rows, "#3A3A3F", "Turnaround", "Temps, extra visits, and a carrying cost if you set a rate.", now.turnaroundCost, now.turnaroundCost / 12);
     addRow(rows, "transparent", "Total", "Staff wages are also inside the overhead line. See the note.", now.total, now.monthly);
 
     $("overlapNote").textContent = "If staff wages are left inside overhead and not added again, the annual estimate is " + money(now.withoutStaffOnTop) + ". The headline adds them on their own line, so payroll on these hours is counted twice. Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
@@ -315,7 +315,7 @@
     var scenario = lossScenario();
     var original = Model.originalComparison(state);
     var lines = [
-      "Practice loss estimate",
+      "Dental Practice Production/Revenue Loss Calculator",
       "",
       "ZIP: " + (region.zip || "(none)"),
       "Area: " + wageRecord().name,
@@ -350,7 +350,7 @@
   }
 
   function mailto(body) {
-    return "mailto:kristi.dillon@meetdandy.com?subject=" + encodeURIComponent("Practice loss estimate") + "&body=" + encodeURIComponent(body);
+    return "mailto:kristi.dillon@meetdandy.com?subject=" + encodeURIComponent("Dental Practice Production/Revenue Loss Calculator") + "&body=" + encodeURIComponent(body);
   }
 
   function onField(el) {

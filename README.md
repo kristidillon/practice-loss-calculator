@@ -1,8 +1,8 @@
-# Practice loss calculator
+# Dental Practice Production/Revenue Loss Calculator
 
 A static estimate of what adjustments, remakes, staff time, overhead, and lab turnaround cost a dental practice. It runs entirely in the browser. Open `index.html` directly, or host the repository root on GitHub Pages.
 
-Kristi Dillon, an account executive at Dandy, is the contact on the page. The report form opens an email draft to kristi.dillon@meetdandy.com. It does not submit anywhere.
+The report form opens an email draft. It does not submit anywhere, and the page does not show the recipient’s name.
 
 ## Use it
 
@@ -102,7 +102,7 @@ The remake field starts at **8%** and units at **25** because those are the one-
 
 ### One-case calculator
 
-Inputs, the comparison formula, slider ranges, and the teal / ink / off-white palette are ported from [kristidillon.github.io/one-case](https://kristidillon.github.io/one-case/#cost) ([source](https://github.com/kristidillon/one-case)). The type is the system font stack (SF Pro on Apple devices, Helvetica otherwise), with the same accent (`#0A7C86`) and ink (`#1D1D1F`).
+Inputs, the comparison formula, and slider ranges are ported from [the one-case page](https://kristidillon.github.io/one-case/#cost) ([source](https://github.com/kristidillon/one-case)). The type is the system font stack. The accent is `#0A7C86`.
 
 ## Assumptions
 
@@ -144,4 +144,4 @@ The form’s `action` is `#`. Submit opens a `mailto:` draft. It does not post t
 
 ## Page shape
 
-The layout is a quiet product page: large type, short sections, one accent color, soft cards, and a night-colored estimate panel in the same family as the one-case calculator. The ZIP is the first step, three practice inputs are the second, and the annual estimate is the third. The breakdown is a labeled stacked bar plus a table. There is no countdown, scarcity, or testimonial.
+The layout is minimal: near-black type on white, soft gray bands, one accent, hairline inputs, and a thin stacked bar. The annual figure is the only display-size number. The ZIP is the first step, three practice inputs are the second, and the annual estimate is the third. There is no countdown, scarcity, or testimonial.
