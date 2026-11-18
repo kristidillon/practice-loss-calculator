@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { originalComparison, annualLoss, equivalents, scenarioInput } = require("../js/model.js");
+const { originalComparison, annualLoss, equivalents, scenarioInput, scaledEstimate } = require("../js/model.js");
 
 const base = {
   units: 25,
@@ -106,5 +106,30 @@ const eq = equivalents(loss, base);
 assert.strictEqual(eq.officeDays, 1726 / 8);
 assert.ok(Math.abs(eq.perOfficeDay - loss.total / (1726 / 8)) < 1e-6);
 assert.ok(Math.abs(eq.crownsOfChairTime - 111 / 1.5) < 1e-9);
+
+const scaled = scaledEstimate(Object.assign({}, base, {
+  providers: 1,
+  operatories: 1,
+  staffSize: 2,
+  unitsPerChair: 10,
+  unitsTouched: false,
+  remakePct: 0,
+  adjustMin: 60,
+  extraVisits: 0,
+  daWage: 23.49,
+  receptionistWage: 21.39,
+  assistantPerChairHour: 1,
+  hygPerChairHour: 1,
+  receptionistPerChairHour: 1,
+  overheadPct: 57.62,
+  productionPerHour: 500
+}));
+assert.strictEqual(scaled.units, 10);
+assert.strictEqual(scaled.hours, 120);
+assert.strictEqual(scaled.chairDollars, 60000);
+assert.ok(Math.abs(scaled.blended - 22.44) < 1e-9);
+assert.ok(Math.abs(scaled.staffDollars - 240 * 22.44) < 1e-6);
+assert.ok(Math.abs(scaled.overheadDollars - 60000 * 0.5762) < 1e-4);
+assert.ok(Math.abs(scaled.total - (scaled.chairDollars + scaled.staffDollars + scaled.overheadDollars)) < 1e-4);
 
 console.log("model tests passed");

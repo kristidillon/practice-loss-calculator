@@ -157,6 +157,42 @@
     };
   }
 
+  function scaledEstimate(input) {
+    var providers = Math.max(0, num(input.providers));
+    var operatories = Math.max(0, num(input.operatories));
+    var staffSize = Math.max(0, num(input.staffSize));
+    var unitsPer = Math.max(0, num(input.unitsPerChair));
+    var chairs = Math.min(providers, operatories);
+    var units = input.unitsTouched ? Math.max(0, num(input.units)) : chairs * unitsPer;
+    var loss = annualLoss(Object.assign({}, input, { units: units }));
+    var visitHours = loss.unitsYear * loss.visits * Math.max(0, num(input.extraVisitMin)) / 60;
+    var hours = loss.coreChairHours + visitHours;
+    var production = Math.max(0, num(input.productionPerHour));
+    var chairDollars = hours * production;
+    var blended = (Math.max(0, num(input.daWage)) + Math.max(0, num(input.receptionistWage))) / 2;
+    var ratioSum = Math.max(0, num(input.assistantPerChairHour)) + Math.max(0, num(input.hygPerChairHour)) + Math.max(0, num(input.receptionistPerChairHour));
+    var staffFactor = ratioSum / 3;
+    var staffHours = operatories > 0 ? hours * (staffSize / operatories) * staffFactor : 0;
+    var staffDollars = staffHours * blended;
+    var overheadDollars = chairDollars * Math.max(0, num(input.overheadPct)) / 100;
+    var otherDollars = loss.labCost + loss.tempCost + loss.carryCost;
+    var total = chairDollars + staffDollars + overheadDollars + otherDollars;
+    return {
+      units: units,
+      chairs: chairs,
+      hours: hours,
+      chairDollars: chairDollars,
+      staffHours: staffHours,
+      staffDollars: staffDollars,
+      blended: blended,
+      overheadDollars: overheadDollars,
+      otherDollars: otherDollars,
+      total: total,
+      monthly: total / 12,
+      loss: loss
+    };
+  }
+
   function scenarioInput(input) {
     return Object.assign({}, input, {
       remakePct: input.scenarioRemake,
@@ -169,6 +205,7 @@
     originalComparison: originalComparison,
     annualLoss: annualLoss,
     equivalents: equivalents,
+    scaledEstimate: scaledEstimate,
     scenarioInput: scenarioInput
   };
 });

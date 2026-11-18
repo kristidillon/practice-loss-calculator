@@ -29,60 +29,48 @@
 
 <main id="top">
   <section class="hero">
+    <div class="wrap intro">
+      <p class="eyebrow">A practice estimate</p>
+      <h1>Dental Practice Production/Revenue Loss Calculator</h1>
+      <p>In DentalPost’s survey of 1,802 registered dental hygienists, fielded from July through October 2023, 19.35% said they had changed employers in the previous 12 months.<sup><a href="#fn1">1</a></sup> Schedules also lose production for reasons dentists name directly. In the ADA Health Policy Institute poll of 923 dentists, collected December 11–17, 2023, the reasons a schedule was not full the previous week were most often no-shows or cancellations with less than 24 hours’ notice (82%), cancellations with more than 24 hours’ notice (51%), not enough patients making appointments (37%), and trouble filling vacant staff positions (27%).<sup><a href="#fn2">2</a></sup></p>
+      <p class="lede">Your lab and workflow shouldn’t contribute to these causes.</p>
+      <a class="btn btn-accent btn-lg" href="#calculator">Calculate your practice’s loss</a>
+    </div>
+  </section>
+
+  <section id="calculator">
     <div class="wrap opening">
       <div>
-        <p class="eyebrow">A practice estimate</p>
-        <h1>Dental Practice Production/Revenue Loss Calculator</h1>
-        <p class="lede">Enter a ZIP code. State wages fill in from published figures. You set the case volume. The annual number is an estimate — chair time, staff, overhead, and the wait on the lab.</p>
-
         <form id="zipForm" action="#result">
-          <label class="step-label" for="zip">Step 1 · U.S. ZIP code</label>
+          <label for="zip">State or ZIP</label>
           <div class="zip-row">
-            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="10001" aria-describedby="zipStatus">
-            <button class="btn btn-accent" type="submit">See the estimate</button>
+            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP" aria-describedby="zipStatus">
+            <button class="btn btn-accent" type="submit">Use ZIP</button>
           </div>
         </form>
         <div class="state-pick">
-          <label for="statePick">Or choose a state</label>
+          <label for="statePick">State</label>
           <select id="statePick">
             <option value="">Select a state</option>
           </select>
         </div>
         <p class="status" id="zipStatus" role="status"></p>
-
-        <p class="step-label">Step 2 · Three numbers from your practice</p>
-        <div class="field">
-          <div class="field-top">
-            <div>
-              <label for="units">Crown and bridge units per month</label>
-              <div class="sub">Single units, bridges, implant crowns</div>
-            </div>
-            <div class="val"><input id="units" data-field="units" type="number" min="1" max="200" value="25" inputmode="numeric"><span class="unit">/ mo</span></div>
+        <div class="quad">
+          <div>
+            <label for="operatories">Operatories</label>
+            <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
+            <p class="hint"><span class="chip assume">Assumption — enter your own</span></p>
           </div>
-          <input data-field="units" type="range" min="1" max="120" value="25" aria-label="Crown and bridge units per month">
-        </div>
-        <div class="field">
-          <div class="field-top">
-            <div>
-              <label for="remakePct">Cases that come back as remakes</label>
-              <div class="sub">Starts at 8%, the one-case calculator’s starting value</div>
-            </div>
-            <div class="val"><input id="remakePct" data-field="remakePct" type="number" min="0" max="50" step="0.1" value="8" inputmode="decimal"><span class="unit">%</span></div>
+          <div>
+            <label for="providers">Providers</label>
+            <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
+            <p class="hint">Dentists and hygienists. <span class="chip assume">Assumption — enter your own</span></p>
           </div>
-          <input data-field="remakePct" type="range" min="0" max="25" step="0.1" value="8" aria-label="Remake rate percent">
-          <div class="chips">
-            <button type="button" class="text-btn" id="useStudyRemake">Use 3.8% from the practice-network study</button>
+          <div>
+            <label for="staffSize">Staff size</label>
+            <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
+            <p class="hint">People who are not providers. <span class="chip assume">Assumption — enter your own</span></p>
           </div>
-        </div>
-        <div class="field">
-          <div class="field-top">
-            <div>
-              <label for="adjustMin">Time adjusting at the seat</label>
-              <div class="sub">Assumption — enter your own. Minutes per crown, chairside</div>
-            </div>
-            <div class="val"><input id="adjustMin" data-field="adjustMin" type="number" min="0" max="60" step="1" value="15" inputmode="numeric"><span class="unit">min</span></div>
-          </div>
-          <input data-field="adjustMin" type="range" min="0" max="45" value="15" aria-label="Adjustment minutes per seat">
         </div>
       </div>
 
@@ -111,7 +99,7 @@
       <div class="card rv">
         <div class="bars" id="bars"></div>
         <div class="legend" aria-hidden="true">
-          <span><b style="background:#0A7C86"></b>Lost production</span>
+          <span><b style="background:#0A7C86"></b>Chair time</span>
           <span><b style="background:#1D1D1F"></b>Staff wages</span>
           <span><b style="background:#6E6E73"></b>Overhead</span>
           <span><b style="background:#C7C7CC"></b>Lab fees</span>
@@ -169,6 +157,49 @@
 
   <section id="area">
     <div class="wrap">
+      <details class="finetune">
+        <summary>Fine-tune</summary>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="units">Crown and bridge units per month</label>
+              <div class="sub">Starts from operatories and providers. Edit to override. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="units" data-field="units" type="number" min="0" max="400" value="50" inputmode="numeric"><span class="unit">/ mo</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="unitsPerChair">Units per provider or operatory</label>
+              <div class="sub">Used when the monthly units field has not been edited</div>
+            </div>
+            <div class="val"><input id="unitsPerChair" data-field="unitsPerChair" type="number" min="0" max="80" step="1" value="25" inputmode="numeric"></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="remakePct">Cases that come back as remakes</label>
+              <div class="sub">Starts at 8%. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="remakePct" data-field="remakePct" type="number" min="0" max="50" step="0.1" value="8" inputmode="decimal"><span class="unit">%</span></div>
+          </div>
+          <input data-field="remakePct" type="range" min="0" max="25" step="0.1" value="8" aria-label="Remake rate percent">
+          <div class="chips">
+            <button type="button" class="text-btn" id="useStudyRemake">Use 3.8% from the practice-network study</button>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="adjustMin">Time adjusting at the seat</label>
+              <div class="sub"><span class="chip assume">Assumption — enter your own</span> Minutes per crown, chairside</div>
+            </div>
+            <div class="val"><input id="adjustMin" data-field="adjustMin" type="number" min="0" max="60" step="1" value="15" inputmode="numeric"><span class="unit">min</span></div>
+          </div>
+          <input data-field="adjustMin" type="range" min="0" max="45" value="15" aria-label="Adjustment minutes per seat">
+        </div>
       <div class="section-head">
         <p class="eyebrow" id="areaEyebrow">Your area</p>
         <h2 id="areaTitle">U.S. averages, ready to edit.</h2>
@@ -352,6 +383,7 @@
           <p class="hint"><button type="button" class="text-btn" id="useCrowns18">Use 18 crowns a month, the self-reported study average</button></p>
         </div>
       </div>
+      </details>
     </div>
   </section>
 
@@ -452,7 +484,11 @@
     <div>Dental Practice Production/Revenue Loss Calculator</div>
     <div>Estimates use the sources above and the numbers you enter.</div>
   </div>
-  <p class="footnote">Averages: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</p>
+  <p class="footnote">
+    <span id="fn1"><sup>1</sup> DentalPost, 2024 Dental Hygienist Salary Survey, fielded July–October 2023, 1,802 registered dental hygienists. 19.35% changed employers in the previous 12 months. <a href="https://www.dental-post.com/hubfs/salarysurvey2024/ss2024-dentalhygienist.pdf">Survey PDF</a>.</span>
+    <span id="fn2"><sup>2</sup> ADA Health Policy Institute, Economic Outlook and Emerging Issues in Dentistry, December 2023. 923 dentists, December 11–17, 2023. Question: which factors prevented the appointment schedule from reaching 100% last week. <a href="https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/dec2023_hpi_economic_outlook_dentistry_slides.pdf">Slides</a>. A 2017 ranking of the top causes of lost production was not used; this poll is the verified source.</span>
+    <span>Averages used in the calculator: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</span>
+  </p>
 </footer>
 
 <noscript><p class="wrap">This estimate needs JavaScript. The page is still a single file you can open locally once JavaScript is available.</p></noscript>

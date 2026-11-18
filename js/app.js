@@ -141,8 +141,12 @@
     return place + " wages, BLS OEWS May 2024. " + prod;
   }
 
-  function lossNow() { return Model.annualLoss(state); }
-  function lossScenario() { return Model.annualLoss(Model.scenarioInput(state)); }
+  function derivedUnits() {
+    var chairs = Math.min(Math.max(0, num(state.providers)), Math.max(0, num(state.operatories)));
+    return chairs * Math.max(0, num(state.unitsPerChair));
+  }
+  function estimateNow() { return Model.scaledEstimate(state); }
+  function estimateScenario() { return Model.scaledEstimate(Model.scenarioInput(state)); }
 
   function bar(loss) {
     var parts = [
@@ -162,7 +166,7 @@
     var label = document.createElement("div");
     label.className = "bar-label";
     var name = document.createElement("span");
-    name.textContent = loss === lossNow() ? "Now" : "Scenario";
+    name.textContent = "Estimate";
     var amount = document.createElement("span");
     amount.textContent = money(loss.total);
     label.appendChild(name);
@@ -224,17 +228,24 @@
   }
 
   function paint() {
-    var now = lossNow();
-    var scenario = lossScenario();
+    if (!state.touched.units && document.activeElement !== $("units")) {
+      state.units = derivedUnits();
+      sync("units");
+    }
+    state.unitsTouched = !!state.touched.units;
+    var est = estimateNow();
+    var estSc = estimateScenario();
+    var now = est.loss;
+    var scenario = estSc.loss;
     var eq = Model.equivalents(now, state);
     var original = Model.originalComparison(state);
     var rec = wageRecord();
 
-    animateAnnual(now.total);
-    $("outDayLine").textContent = "About " + money(now.monthly) + " a month, and about " + money(eq.perOfficeDay) + " an office day.";
-    $("outCrowns").textContent = "Chair time in adjustments and remakes: " + fmt(now.coreChairHours, 1) + " hours, " + money(now.lostProduction) + " of production — about " + fmt(eq.crownsOfChairTime, 0) + " crowns at " + fmt(state.remakeHours, 2) + " hours each.";
+    animateAnnual(est.total);
+    $("outDayLine").textContent = "About " + money(est.monthly) + " a month, and about " + money(eq.officeDays > 0 ? est.total / eq.officeDays : 0) + " an office day.";
+    $("outCrowns").textContent = "Time lost: " + fmt(est.hours, 1) + " hours a year. Chair time in that total is " + money(est.chairDollars) + ". Staff is " + money(est.staffDollars) + ". Overhead is " + money(est.overheadDollars) + ".";
     $("outRegion").textContent = regionSentence();
-    $("outMonthLine").innerHTML = "Every month at this pace, the estimate is about <b>" + money(now.monthly) + "</b>.";
+    $("outMonthLine").innerHTML = "Every month at this pace, the estimate is about <b>" + money(est.monthly) + "</b>.";
 
     if (now.visits > 0) {
       var visitDollars = now.visitProduction + now.visitStaff + now.visitOverhead;
@@ -283,40 +294,56 @@
 
     var bars = $("bars");
     bars.textContent = "";
-    var nowLabel = bar(now);
+    var nowBar = {
+      lostProduction: est.chairDollars,
+      staffCost: est.staffDollars,
+      overheadBurn: est.overheadDollars,
+      labCost: est.loss.labCost,
+      turnaroundCost: est.otherDollars - est.loss.labCost,
+      total: est.total
+    };
+    var scBar = {
+      lostProduction: estSc.chairDollars,
+      staffCost: estSc.staffDollars,
+      overheadBurn: estSc.overheadDollars,
+      labCost: estSc.loss.labCost,
+      turnaroundCost: estSc.otherDollars - estSc.loss.labCost,
+      total: estSc.total
+    };
+    var nowLabel = bar(nowBar);
     nowLabel.querySelector(".bar-label span").textContent = "Now";
-    var scLabel = bar(scenario);
+    var scLabel = bar(scBar);
     scLabel.querySelector(".bar-label span").textContent = "Fewer adjustments and remakes";
     bars.appendChild(nowLabel);
     bars.appendChild(scLabel);
 
     var rows = $("rows");
     rows.textContent = "";
-    addRow(rows, "#0A7C86", "Lost production", "Adjustment and remake chair time, priced at production per hour.", now.lostProduction, now.lostProduction / 12);
-    addRow(rows, "#1D1D1F", "Staff wages", "Hygienist, assistant, and receptionist time on the chair hours, at the wages above.", now.staffCost, now.staffCost / 12);
-    addRow(rows, "#6E6E73", "Overhead", "The overhead percent applied to those same chair hours.", now.overheadBurn, now.overheadBurn / 12);
-    addRow(rows, "#C7C7CC", "Lab remake fees", state.labFee > 0 ? "Your lab fee times remakes." : "Lab fee is $0 until you enter one. Assumption — enter your own.", now.labCost, now.labCost / 12);
-    addRow(rows, "#3A3A3F", "Turnaround", "Temps, extra visits, and a carrying cost if you set a rate.", now.turnaroundCost, now.turnaroundCost / 12);
-    addRow(rows, "transparent", "Total", "Staff wages are also inside the overhead line. See the note.", now.total, now.monthly);
+    addRow(rows, "#0A7C86", "Chair time", "Hours lost to adjustments, remakes, and extra visits, priced at production per hour.", est.chairDollars, est.chairDollars / 12);
+    addRow(rows, "#1D1D1F", "Staff", "Those hours times staff size divided by operatories, at the average assistant and receptionist wage.", est.staffDollars, est.staffDollars / 12);
+    addRow(rows, "#6E6E73", "Overhead", "The overhead percent applied to the chair-time dollars.", est.overheadDollars, est.overheadDollars / 12);
+    addRow(rows, "#C7C7CC", "Lab remake fees", state.labFee > 0 ? "Your lab fee times remakes." : "Lab fee is $0 until you enter one. Assumption — enter your own.", est.loss.labCost, est.loss.labCost / 12);
+    addRow(rows, "#3A3A3F", "Temps and delay", "Temp cost and carrying cost. Extra-visit chair time is in the chair and staff rows.", est.otherDollars - est.loss.labCost, (est.otherDollars - est.loss.labCost) / 12);
+    addRow(rows, "transparent", "Total", "Staff wages can also sit inside overhead. See the note.", est.total, est.monthly);
 
-    $("overlapNote").textContent = "If staff wages are left inside overhead and not added again, the annual estimate is " + money(now.withoutStaffOnTop) + ". The headline adds them on their own line, so payroll on these hours is counted twice. Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
+    $("overlapNote").textContent = "Overhead here is a percent of the lost production dollars, so it is not the same dollars as the staff line. If you leave staff inside overhead only, the annual estimate is " + money(est.total - est.staffDollars) + ". Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
 
     $("buildFormula").textContent = fmt(now.unitsYear, 0) + " units a year. Adjustments " + fmt(now.adjustmentHours, 1) + " hours. Remakes " + fmt(now.remakesYear, 1) + " × " + fmt(state.remakeHours, 2) + " hours. Production " + money(state.productionPerHour) + "/hour. Overhead " + fmt(state.overheadPct, 2) + "%. Extra visits counted: " + fmt(now.visits, 2) + ".";
 
-    $("nowTotal").textContent = money(now.total);
-    $("scTotal").textContent = money(scenario.total);
+    $("nowTotal").textContent = money(est.total);
+    $("scTotal").textContent = money(estSc.total);
     $("nowQueue").textContent = "Billings in the queue: " + money(now.queueBillings) + ". Not added to the loss. Extra visits counted: " + fmt(now.visits, 2) + ".";
     $("scQueue").textContent = "Billings in the queue: " + money(scenario.queueBillings) + ". Not added to the loss. Extra visits counted: " + fmt(scenario.visits, 2) + ".";
-    var diff = now.total - scenario.total;
+    var diff = est.total - estSc.total;
     $("outDiff").textContent = Math.round(diff) === 0
       ? "These two estimates match at the current inputs."
       : (diff > 0
         ? "About " + money(diff) + " less per year in this scenario."
         : "About " + money(-diff) + " more per year in this scenario.");
-    var prodGap = now.lostProduction - scenario.lostProduction;
+    var prodGap = est.chairDollars - estSc.chairDollars;
     $("outProdGap").textContent = Math.round(prodGap) === 0
       ? "Production value tied to that chair time is the same in both."
-      : "Production tied to chair time is " + money(now.lostProduction) + " now and " + money(scenario.lostProduction) + " in this scenario — " + money(Math.abs(prodGap)) + (prodGap > 0 ? " less production lost." : " more production lost.");
+      : "Production tied to the lost chair time is " + money(est.chairDollars) + " now and " + money(estSc.chairDollars) + " in this scenario — " + money(Math.abs(prodGap)) + (prodGap > 0 ? " less production lost." : " more production lost.");
 
     $("deltaDollars").textContent = money(original.dollars);
     $("deltaHours").textContent = fmt(original.chairHours, 0);

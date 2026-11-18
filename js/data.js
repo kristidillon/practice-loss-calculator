@@ -402,7 +402,7 @@ window.PRACTICE_DATA = {
     "crownsPerMonth": 18
   },
   "defaults": {
-    "units": 25,
+    "units": 50,
     "remakePct": 8,
     "adjustMin": 15,
     "productionPerHour": 500,
@@ -433,6 +433,10 @@ window.PRACTICE_DATA = {
     "scenarioRemake": 2,
     "scenarioAdjust": 5,
     "scenarioTurnaround": 7,
+    "operatories": 4,
+    "providers": 2,
+    "staffSize": 3,
+    "unitsPerChair": 25,
     "receptionistWage": 21.39,
     "hygPerChairHour": 1,
     "receptionistPerChairHour": 1
