@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dental Practice Production/Revenue Loss Calculator</title>
 <meta name="description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
-<meta property="og:title" content="What is lost chair time costing your practice?">
-<meta property="og:description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
+<meta property="og:title" content="What is lab time costing your practice?">
+<meta property="og:description" content="See in a minute what waiting on labs, chairside adjustments, remakes, and running behind cost in dollars, based on your own numbers.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kristidillon.github.io/practice-loss-calculator/">
 <meta property="og:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
@@ -14,31 +14,40 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="What is lost chair time costing your practice?">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="What is lost chair time costing your practice?">
-<meta name="twitter:description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
+<meta name="twitter:title" content="What is lab time costing your practice?">
+<meta name="twitter:description" content="See in a minute what waiting on labs, chairside adjustments, remakes, and running behind cost in dollars, based on your own numbers.">
 <meta name="twitter:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<main id="screen1" class="gate">
+  <a class="wordmark" href="#screen1">Dandy</a>
+  <div class="gate-card">
+    <h1>What is lab time costing your practice?</h1>
+    <p class="lead">See in a minute what waiting on labs, chairside adjustments, remakes, and running behind cost in dollars, based on your own numbers.</p>
+    <p class="lead next">Enter your practice ZIP code to load wage data for your state. Then fill in your office size and time lost. The estimate updates as you type.</p>
+    <label for="zip">Enter your practice ZIP code</label>
+    <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP code" aria-describedby="zipStatus">
+    <p class="status" id="zipStatus" role="status"></p>
+    <button type="button" class="btn btn-block" id="continueZip">Continue</button>
+  </div>
+</main>
+<div id="screen2" class="screen" hidden>
 <a class="skip" href="#result">Skip to the estimate</a>
 <header class="nav">
-  <div class="wrap wide">
+  <div class="wrap wide nav-row">
     <a class="brand wordmark" href="#top">Dandy</a>
+    <div class="wage-block">
+      <p class="wage-line">Wages for: <b id="wagePlace">your state</b> <button type="button" class="text-btn" id="changeZip">Change</button></p>
+      <p class="staff-stat"><span>Staff cost per hour</span> <b id="staffRate">$0</b></p>
+      <p class="hint" id="staffNote">Wages only, BLS May 2024, before benefits.</p>
+    </div>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero">
-    <div class="wrap wide intro">
-      <p class="kicker">Dental Practice Production/Revenue Loss Calculator</p>
-      <h1>What is lost chair time costing your practice?</h1>
-      <p class="subhead">Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.</p>
-      <a class="btn btn-accent btn-lg" href="#calculator">See my number</a>
-    </div>
-  </section>
-
   <section class="facts" aria-label="Survey findings">
     <div class="wrap wide">
       <ul class="tiles">
@@ -64,44 +73,90 @@
       <div class="panel">
         <div class="calc">
           <div class="inputs">
-            <div>
-              <label for="zip">State or ZIP</label>
-              <div class="combo">
-                <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP" aria-describedby="zipStatus">
-                <select id="statePick" aria-label="State"></select>
+            <div class="step-block">
+              <div class="step-kicker"><span>Your practice</span><span>1 / 2</span></div>
+              <div>
+                <label for="operatories">How many operatories are in use?</label>
+                <p class="hint">Chairs you can run this week.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="operatories" data-dir="-1" aria-label="Fewer operatories">−</button>
+                  <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
+                  <button type="button" class="step" data-step="operatories" data-dir="1" aria-label="More operatories">+</button>
+                </div>
+              </div>
+              <div>
+                <label for="providers">How many providers see patients?</label>
+                <p class="hint">Dentists and hygienists.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="providers" data-dir="-1" aria-label="Fewer providers">−</button>
+                  <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
+                  <button type="button" class="step" data-step="providers" data-dir="1" aria-label="More providers">+</button>
+                </div>
+              </div>
+              <div>
+                <label for="staffSize">How many other staff are on the team?</label>
+                <p class="hint">Not providers. Assumption — enter your own.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="staffSize" data-dir="-1" aria-label="Fewer staff">−</button>
+                  <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
+                  <button type="button" class="step" data-step="staffSize" data-dir="1" aria-label="More staff">+</button>
+                </div>
               </div>
             </div>
-            <div>
-              <label for="operatories">Operatories</label>
-              <div class="stepper">
-                <button type="button" class="step" data-step="operatories" data-dir="-1" aria-label="Fewer operatories">−</button>
-                <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
-                <button type="button" class="step" data-step="operatories" data-dir="1" aria-label="More operatories">+</button>
+            <div class="step-block">
+              <div class="step-kicker"><span>Your lab</span><span>2 / 2</span></div>
+              <div>
+                <label for="fixedCases">How many crowns, bridges &amp; implant crowns do you send a month?</label>
+                <p class="hint">A starting guess. Assumption — enter your own.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="fixedCases" data-dir="-1" aria-label="Fewer fixed cases">−</button>
+                  <input id="fixedCases" data-field="fixedCases" type="number" min="0" max="400" step="1" value="20" inputmode="numeric">
+                  <button type="button" class="step" data-step="fixedCases" data-dir="1" aria-label="More fixed cases">+</button>
+                </div>
+              </div>
+              <div>
+                <label for="removableCases">How many partials &amp; dentures?</label>
+                <p class="hint">A month. Assumption — enter your own.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="removableCases" data-dir="-1" aria-label="Fewer removable cases">−</button>
+                  <input id="removableCases" data-field="removableCases" type="number" min="0" max="200" step="1" value="6" inputmode="numeric">
+                  <button type="button" class="step" data-step="removableCases" data-dir="1" aria-label="More removable cases">+</button>
+                </div>
+              </div>
+              <div>
+                <label for="turnaroundDays">How many days until cases are back in your hands?</label>
+                <p class="hint">Extra visits start after 7 days.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="turnaroundDays" data-dir="-1" aria-label="Fewer turnaround days">−</button>
+                  <input id="turnaroundDays" data-field="turnaroundDays" type="number" min="0" max="120" step="1" value="14" inputmode="numeric">
+                  <button type="button" class="step" data-step="turnaroundDays" data-dir="1" aria-label="More turnaround days">+</button>
+                </div>
+              </div>
+              <div>
+                <label for="adjustMin">Minutes spent adjusting each case at seat</label>
+                <p class="hint">Crowns use this. Partials start at 30.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="adjustMin" data-dir="-1" aria-label="Fewer adjustment minutes">−</button>
+                  <input id="adjustMin" data-field="adjustMin" type="number" min="0" max="120" step="1" value="15" inputmode="numeric">
+                  <button type="button" class="step" data-step="adjustMin" data-dir="1" aria-label="More adjustment minutes">+</button>
+                </div>
+              </div>
+              <div>
+                <label for="remakesPerMonth">Remakes last month</label>
+                <p class="hint">A count, not a percent.</p>
+                <div class="stepper">
+                  <button type="button" class="step" data-step="remakesPerMonth" data-dir="-1" aria-label="Fewer remakes">−</button>
+                  <input id="remakesPerMonth" data-field="remakesPerMonth" type="number" min="0" max="80" step="1" value="2" inputmode="numeric">
+                  <button type="button" class="step" data-step="remakesPerMonth" data-dir="1" aria-label="More remakes">+</button>
+                </div>
               </div>
             </div>
-            <div>
-              <label for="providers">Providers</label>
-              <div class="stepper">
-                <button type="button" class="step" data-step="providers" data-dir="-1" aria-label="Fewer providers">−</button>
-                <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
-                <button type="button" class="step" data-step="providers" data-dir="1" aria-label="More providers">+</button>
-              </div>
-            </div>
-            <div>
-              <label for="staffSize">Staff size</label>
-              <div class="stepper">
-                <button type="button" class="step" data-step="staffSize" data-dir="-1" aria-label="Fewer staff">−</button>
-                <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
-                <button type="button" class="step" data-step="staffSize" data-dir="1" aria-label="More staff">+</button>
-              </div>
-            </div>
-            <p class="status" id="zipStatus" role="status"></p>
-            <p class="hint">Assumption — enter your own.</p>
           </div>
 
           <div class="result" id="result">
             <div class="lbl">Estimated loss per year</div>
             <div class="big" id="outAnnual">$0</div>
+            <p class="pace" id="outPace">That's about 0 chair hours a month, or 0 full days.</p>
             <div class="substats">
               <p><b id="outMonth">$0</b> <span>per month</span></p>
               <p><b id="outCrowns">0</b> <span>hours lost</span></p>
@@ -151,10 +206,10 @@
         <div class="field">
           <div class="field-top">
             <div>
-              <label for="scenarioRemake">Remake rate in the comparison (%)</label>
-              <div class="sub">The “With fewer remakes” bar uses this. Starts at 2%. <span class="chip assume">Assumption — enter your own</span></div>
+              <label for="scenarioRemakes">Remakes per month in the comparison</label>
+              <div class="sub">The “With fewer remakes” bar uses this count. Starts at 1. <span class="chip assume">Assumption — enter your own</span></div>
             </div>
-            <div class="val"><input id="scenarioRemake" data-field="scenarioRemake" type="number" min="0" max="50" step="0.1" value="2" inputmode="decimal"><span class="unit">%</span></div>
+            <div class="val"><input id="scenarioRemakes" data-field="scenarioRemakes" type="number" min="0" max="80" step="1" value="1" inputmode="numeric"></div>
           </div>
         </div>
         <div class="field">
@@ -209,12 +264,30 @@
         <div class="field">
           <div class="field-top">
             <div>
-              <label for="adjustMin">Time adjusting at the seat</label>
-              <div class="sub"><span class="chip assume">Assumption — enter your own</span> Minutes per crown, chairside</div>
+              <label for="adjustMinFine">Fixed cases: adjustment minutes</label>
+              <div class="sub"><span class="chip assume">Assumption — enter your own</span> Crowns, bridges, and implant crowns. Same field as the lab step.</div>
             </div>
-            <div class="val"><input id="adjustMin" data-field="adjustMin" type="number" min="0" max="60" step="1" value="15" inputmode="numeric"><span class="unit">min</span></div>
+            <div class="val"><input id="adjustMinFine" data-field="adjustMin" type="number" min="0" max="120" step="1" value="15" inputmode="numeric"><span class="unit">min</span></div>
           </div>
-          <input data-field="adjustMin" type="range" min="0" max="45" value="15" aria-label="Adjustment minutes per seat">
+          <input data-field="adjustMin" type="range" min="0" max="45" value="15" aria-label="Fixed adjustment minutes">
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="removableAdjustMin">Removable cases: adjustment minutes</label>
+              <div class="sub"><span class="chip assume">Assumption — enter your own</span> Partials and dentures. No public average is loaded. Starts at 30.</div>
+            </div>
+            <div class="val"><input id="removableAdjustMin" data-field="removableAdjustMin" type="number" min="0" max="180" step="1" value="30" inputmode="numeric"><span class="unit">min</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="removableRemakeHours">Removable cases: chair hours per remake</label>
+              <div class="sub"><span class="chip assume">Assumption — enter your own</span> Starts at 2.5. Fixed remakes use the chair-hours field below. Remakes you enter are split between the two in proportion to the cases you send.</div>
+            </div>
+            <div class="val"><input id="removableRemakeHours" data-field="removableRemakeHours" type="number" min="0" max="8" step="0.1" value="2.5" inputmode="decimal"><span class="unit">hr</span></div>
+          </div>
         </div>
       <div class="section-head">
         <p class="eyebrow" id="areaEyebrow">Your area</p>
@@ -357,8 +430,8 @@
           </div>
           <div class="pair">
             <div>
-              <label for="turnaroundDays">Lab turnaround (days)</label>
-              <input id="turnaroundDays" data-field="turnaroundDays" type="number" min="0" max="120" step="1" value="14" inputmode="numeric">
+              <label for="turnaroundDaysFine">Lab turnaround (days)</label>
+              <input id="turnaroundDaysFine" data-field="turnaroundDays" type="number" min="0" max="120" step="1" value="14" inputmode="numeric">
               <p class="hint"><span class="chip assume">Assumption — enter your own</span> Starts at 14 days. Not a measured U.S. average.</p>
             </div>
             <div>
@@ -498,7 +571,7 @@
 <footer>
   <div class="wrap foot">
     <div>Dental Practice Production/Revenue Loss Calculator</div>
-    <div>Estimates use the sources above and the numbers you enter.</div>
+    <div>Estimates based on the numbers you enter plus BLS May 2024 state wages. Not a guarantee.</div>
   </div>
   <p class="footnote">
     <span id="fn1"><sup>1</sup> DentalPost, 2024 Dental Hygienist Salary Survey, fielded July–October 2023, 1,802 registered dental hygienists. 19.35% changed employers in the previous 12 months. <a href="https://www.dental-post.com/hubfs/salarysurvey2024/ss2024-dentalhygienist.pdf">Survey PDF</a>.</span>
@@ -513,6 +586,7 @@
 <div class="sticky-total" id="stickyTotal">
   <span>Estimated loss per year</span>
   <b id="stickyAnnual">$0</b>
+</div>
 </div>
 <script src="js/data.js"></script>
 <script src="js/zips.js"></script>

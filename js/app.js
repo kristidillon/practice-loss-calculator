@@ -112,14 +112,14 @@
 
   function lookupZip(raw) {
     var digits = String(raw || "").replace(/\D/g, "").slice(0, 5);
-    if (digits.length !== 5) return { error: "Enter a 5-digit U.S. ZIP code." };
+    if (digits.length !== 5) return { error: "Enter a 5-digit ZIP code." };
     var code = ZIPS.exact[digits];
     var via = "ZIP";
     if (!code && ZIPS.prefixUnanimous[digits.slice(0, 3)]) {
       code = ZIPS.prefixUnanimous[digits.slice(0, 3)];
       via = "ZIP prefix";
     }
-    if (!code) return { unmatched: true, zip: digits, error: "That ZIP is not in the local list. Choose a state instead." };
+    if (!code || code === "MIL" || !DATA.wages.states[code]) return { unmatched: true, zip: digits, error: "That ZIP code isn't in our state wage table. Check the number and try again." };
     return { zip: digits, code: code, via: via };
   }
 
@@ -142,8 +142,7 @@
   }
 
   function derivedUnits() {
-    var chairs = Math.min(Math.max(0, num(state.providers)), Math.max(0, num(state.operatories)));
-    return chairs * Math.max(0, num(state.unitsPerChair));
+    return Math.max(0, num(state.fixedCases)) + Math.max(0, num(state.removableCases));
   }
   function estimateNow() { return Model.scaledEstimate(state); }
   function estimateScenario() { return Model.scaledEstimate(Model.scenarioInput(state)); }
@@ -257,6 +256,14 @@
     var rec = wageRecord();
 
     $("outCrowns").textContent = fmt(est.hours, 1);
+    var monthHours = est.hours / 12;
+    var fullDays = monthHours / Math.max(1, num(state.hoursPerDay));
+    $("outPace").textContent = "That's about " + fmt(monthHours, 1) + " chair hour" + (Math.abs(monthHours - 1) < 0.05 ? "" : "s") + " a month, or " + fmt(fullDays, 1) + " full day" + (Math.abs(fullDays - 1) < 0.05 ? "" : "s") + ".";
+    $("wagePlace").textContent = rec.name;
+    $("staffRate").textContent = wageText((num(rec.assistant) + num(rec.receptionist)) / 2);
+    $("staffNote").textContent = rec.receptionistFromNational && !rec.national
+      ? "Assistant wage for this state. Receptionist uses the U.S. mean. Wages only, before benefits."
+      : "Assistant and receptionist average. Wages only, BLS May 2024, before benefits.";
     animateAnnual(Math.round(est.chairDollars) + Math.round(est.staffDollars) + Math.round(est.otherDollars));
 
     if (document.activeElement !== $("productionPerDay")) {
@@ -409,6 +416,7 @@
 
   function fillStates() {
     var select = $("statePick");
+    if (!select) return;
     var us = document.createElement("option");
     us.value = "US";
     us.textContent = "U.S. average";
@@ -430,28 +438,55 @@
     node.classList.toggle("bad", !!bad);
   }
 
-  function applyZipValue(raw) {
-    var found = lookupZip(raw);
+  function showScreen(which) {
+    var gate = $("screen1");
+    var app = $("screen2");
+    var enter = which === 2 ? app : gate;
+    var leave = which === 2 ? gate : app;
+    if (reduced) {
+      leave.hidden = true;
+      enter.hidden = false;
+      if (which === 1) $("zip").focus();
+      else window.scrollTo(0, 0);
+      return;
+    }
+    leave.classList.add("is-leaving");
+    window.setTimeout(function () {
+      leave.hidden = true;
+      leave.classList.remove("is-leaving");
+      enter.hidden = false;
+      if (which === 1) $("zip").focus();
+      else window.scrollTo(0, 0);
+    }, 180);
+  }
+
+  function openFromZip(raw) {
+    var digits = String(raw || "").replace(/\D/g, "").slice(0, 5);
+    $("zip").value = digits;
+    if (digits.length !== 5) {
+      status("Enter a 5-digit ZIP code.", true);
+      return false;
+    }
+    var found = lookupZip(digits);
     if (found.error) {
-      status(found.error);
+      status(found.error, true);
       return false;
     }
     applyRegion(found.code, found.zip);
     status("");
+    showScreen(2);
     return true;
   }
 
   $("zip").addEventListener("input", function () {
-    var digits = $("zip").value.replace(/\D/g, "").slice(0, 5);
-    $("zip").value = digits;
-    if (digits.length === 5) applyZipValue(digits);
-  });
-  $("statePick").addEventListener("change", function () {
-    if (!$("statePick").value) return;
-    $("zip").value = "";
-    applyRegion($("statePick").value, "");
+    $("zip").value = $("zip").value.replace(/\D/g, "").slice(0, 5);
     status("");
   });
+  $("continueZip").addEventListener("click", function () { openFromZip($("zip").value); });
+  $("zip").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { event.preventDefault(); openFromZip($("zip").value); }
+  });
+  $("changeZip").addEventListener("click", function () { showScreen(1); });
 
   document.body.addEventListener("input", function (event) {
     if (event.target && event.target.dataset && event.target.dataset.field) onField(event.target);
@@ -506,6 +541,7 @@
       "Estimated loss per year: " + $("outAnnual").textContent,
       "Per month: " + $("outMonth").textContent,
       "Hours lost: " + $("outCrowns").textContent,
+      $("outPace").textContent,
       rows,
       "Production lost now: " + $("nowProd").textContent,
       "With fewer remakes: " + $("scProd").textContent
@@ -544,9 +580,5 @@
   paint();
 
   var params = new URLSearchParams(window.location.search);
-  if (params.get("zip")) {
-    var initialZip = params.get("zip").replace(/\D/g, "").slice(0, 5);
-    $("zip").value = initialZip;
-    if (initialZip.length === 5) applyZipValue(initialZip);
-  }
+  if (params.get("zip")) openFromZip(params.get("zip"));
 })();

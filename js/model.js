@@ -158,16 +158,29 @@
   }
 
   function scaledEstimate(input) {
-    var providers = Math.max(0, num(input.providers));
     var operatories = Math.max(0, num(input.operatories));
     var staffSize = Math.max(0, num(input.staffSize));
-    var unitsPer = Math.max(0, num(input.unitsPerChair));
-    var chairs = Math.min(providers, operatories);
-    var units = input.unitsTouched ? Math.max(0, num(input.units)) : chairs * unitsPer;
-    var loss = annualLoss(Object.assign({}, input, { units: units }));
-    var visitHours = loss.unitsYear * loss.visits * Math.max(0, num(input.extraVisitMin)) / 60;
-    var hours = loss.coreChairHours + visitHours;
+    var providers = Math.max(0, num(input.providers));
+    var fixedMonth = Math.max(0, num(input.fixedCases));
+    var removableMonth = Math.max(0, num(input.removableCases));
+    var casesMonth = fixedMonth + removableMonth;
+    var remakesMonth = Math.max(0, num(input.remakesPerMonth));
+    var fixedAdj = Math.max(0, num(input.fixedAdjustMin != null ? input.fixedAdjustMin : input.adjustMin));
+    var removableAdj = Math.max(0, num(input.removableAdjustMin));
+    var fixedRh = Math.max(0, num(input.fixedRemakeHours != null ? input.fixedRemakeHours : input.remakeHours));
+    var removableRh = Math.max(0, num(input.removableRemakeHours));
+    var fixedShare = casesMonth > 0 ? fixedMonth / casesMonth : 1;
+    var fixedRemakesYear = remakesMonth * 12 * fixedShare;
+    var removableRemakesYear = remakesMonth * 12 * (1 - fixedShare);
+    var adjustmentHours = fixedMonth * 12 * fixedAdj / 60 + removableMonth * 12 * removableAdj / 60;
+    var remakeChairHours = fixedRemakesYear * fixedRh + removableRemakesYear * removableRh;
+    var coreChairHours = adjustmentHours + remakeChairHours;
     var production = Math.max(0, num(input.productionPerHour));
+    var turnaroundDays = Math.max(0, num(input.turnaroundDays));
+    var extraAfter = Math.max(0, num(input.extraVisitAfterDays));
+    var visits = turnaroundDays > extraAfter ? Math.max(0, num(input.extraVisits)) : 0;
+    var visitHours = casesMonth * 12 * visits * Math.max(0, num(input.extraVisitMin)) / 60;
+    var hours = coreChairHours + visitHours;
     var chairDollars = hours * production;
     var blended = (Math.max(0, num(input.daWage)) + Math.max(0, num(input.receptionistWage))) / 2;
     var ratioSum = Math.max(0, num(input.assistantPerChairHour)) + Math.max(0, num(input.hygPerChairHour)) + Math.max(0, num(input.receptionistPerChairHour));
@@ -175,13 +188,20 @@
     var staffHours = operatories > 0 ? hours * (staffSize / operatories) * staffFactor : 0;
     var staffDollars = staffHours * blended;
     var overheadDollars = chairDollars * Math.max(0, num(input.overheadPct)) / 100;
-    var otherDollars = loss.labCost + loss.tempCost + loss.carryCost;
-    // Billings per hour already include overhead, so the share is reported and not added.
+    var casesYear = casesMonth * 12;
+    var remakesYear = fixedRemakesYear + removableRemakesYear;
+    var labCost = remakesYear * Math.max(0, num(input.labFee));
+    var tempCost = casesYear * Math.max(0, num(input.tempCost));
+    var blendedRh = casesMonth > 0 ? (fixedMonth * fixedRh + removableMonth * removableRh) / casesMonth : fixedRh;
+    var carryCost = casesYear * production * blendedRh * (turnaroundDays / 365) * Math.max(0, num(input.carryRatePct)) / 100;
+    var otherDollars = labCost + tempCost + carryCost;
     var total = chairDollars + staffDollars + otherDollars;
+    var queueBillings = casesMonth * (turnaroundDays / 30) * production * blendedRh;
     return {
-      units: units,
-      chairs: chairs,
+      units: casesMonth,
+      chairs: Math.min(providers, operatories),
       hours: hours,
+      monthHours: hours / 12,
       chairDollars: chairDollars,
       staffHours: staffHours,
       staffDollars: staffDollars,
@@ -190,14 +210,29 @@
       otherDollars: otherDollars,
       total: total,
       monthly: total / 12,
-      loss: loss
+      loss: {
+        unitsYear: casesYear,
+        remakesYear: remakesYear,
+        adjustmentHours: adjustmentHours,
+        remakeChairHours: remakeChairHours,
+        coreChairHours: coreChairHours,
+        visits: visits,
+        labCost: labCost,
+        tempCost: tempCost,
+        carryCost: carryCost,
+        queueBillings: queueBillings
+      }
     };
   }
 
   function scenarioInput(input) {
+    var fewerRemakes = input.scenarioRemakes != null ? input.scenarioRemakes : input.remakesPerMonth;
     return Object.assign({}, input, {
       remakePct: input.scenarioRemake,
       adjustMin: input.scenarioAdjust,
+      fixedAdjustMin: input.scenarioAdjust,
+      removableAdjustMin: input.scenarioAdjust,
+      remakesPerMonth: fewerRemakes,
       turnaroundDays: input.scenarioTurnaround
     });
   }
