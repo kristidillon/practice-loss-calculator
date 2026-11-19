@@ -246,6 +246,11 @@
       state.units = derivedUnits();
       sync("units");
     }
+    if (!state.touched.remakesPerMonth && document.activeElement !== $("remakesPerMonth")) {
+      var caseCount = Math.max(0, num(state.fixedCases)) + Math.max(0, num(state.removableCases));
+      state.remakesPerMonth = Math.round(caseCount * Math.max(0, num(state.remakePct)) / 100);
+      sync("remakesPerMonth");
+    }
     state.unitsTouched = !!state.touched.units;
     var est = estimateNow();
     var estSc = estimateScenario();

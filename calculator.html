@@ -128,14 +128,14 @@
           </div>
         </div>
         <div>
-          <label for="remakesPerMonth">Remakes last month</label>
+          <label for="remakesPerMonth">Remakes last month <a class="source-pill" href="https://pubmed.ncbi.nlm.nih.gov/30412320/" target="_blank" rel="noopener noreferrer">Source: McCracken et al., 2018</a></label>
           <div class="stepper">
             <button type="button" class="step" data-step="remakesPerMonth" data-dir="-1" aria-label="Fewer remakes">−</button>
-            <input id="remakesPerMonth" data-field="remakesPerMonth" type="number" min="0" max="80" step="1" value="2" inputmode="numeric">
+            <input id="remakesPerMonth" data-field="remakesPerMonth" type="number" min="0" max="80" step="1" value="1" inputmode="numeric">
             <button type="button" class="step" data-step="remakesPerMonth" data-dir="1" aria-label="More remakes">+</button>
           </div>
         </div>
-        <p class="hint">Partials start at 30 minutes. Remakes are a count, not a percent. Assumption — enter your own.</p>
+        <p class="hint">Remakes start at 3.8% of these cases, rounded. Partials start at 30 minutes. Assumption — enter your own.</p>
       </div>
     </div>
   </section>
@@ -223,12 +223,12 @@
         <div class="field">
           <div class="field-top">
             <div>
-              <label for="remakePct">Cases that come back as remakes</label>
-              <div class="sub">Starts at 8%. <span class="chip assume">Assumption — enter your own</span></div>
+              <label for="remakePct">Cases that come back as remakes <a class="source-pill" href="https://pubmed.ncbi.nlm.nih.gov/30412320/" target="_blank" rel="noopener noreferrer">Source: McCracken et al., 2018</a></label>
+              <div class="sub">Starts at 3.8%, the single-unit crown remake rate in that study. <span class="chip assume">Assumption — enter your own</span></div>
             </div>
-            <div class="val"><input id="remakePct" data-field="remakePct" type="number" min="0" max="50" step="0.1" value="8" inputmode="decimal"><span class="unit">%</span></div>
+            <div class="val"><input id="remakePct" data-field="remakePct" type="number" min="0" max="50" step="0.1" value="3.8" inputmode="decimal"><span class="unit">%</span></div>
           </div>
-          <input data-field="remakePct" type="range" min="0" max="25" step="0.1" value="8" aria-label="Remake rate percent">
+          <input data-field="remakePct" type="range" min="0" max="25" step="0.1" value="3.8" aria-label="Remake rate percent">
           <div class="chips">
             <button type="button" class="text-btn" id="useStudyRemake">Use 3.8% from the practice-network study</button>
           </div>
@@ -271,7 +271,7 @@
           <h3>Production</h3>
           <span class="chip source">ADA HPI, 2025 · national</span>
           <div>
-            <label for="productionPerHour">Gross billings per practice hour</label>
+            <label for="productionPerHour">Gross billings per practice hour <a class="source-pill" href="https://www.ada.org/resources/research/health-policy-institute/dental-practice-research" target="_blank" rel="noopener noreferrer">Source: ADA HPI, 2025</a></label>
             <div class="money-input"><span>$</span><input id="productionPerHour" data-field="productionPerHour" type="number" min="100" max="3000" step="0.01" value="500" inputmode="decimal"></div>
             <input data-field="productionPerHour" type="range" min="100" max="1500" step="1" value="500" aria-label="Production per hour in dollars">
             <p class="hint" id="prodMeta"></p>
@@ -305,17 +305,17 @@
           <span class="chip source">BLS OEWS, May 2024</span>
           <p class="hint" id="teamLine"></p>
           <div>
-            <label for="hygWage">Dental hygienist, mean hourly wage</label>
+            <label for="hygWage">Dental hygienist, mean hourly wage <a class="source-pill" href="https://www.bls.gov/oes/tables.htm" target="_blank" rel="noopener noreferrer">Source: BLS OEWS, 2024</a></label>
             <div class="money-input"><span>$</span><input id="hygWage" data-field="hygWage" type="number" min="0" step="0.01" value="45.14" inputmode="decimal"></div>
             <p class="hint" id="hygMeta">SOC 29-1292. Official cross-industry mean. Not a loaded wage.</p>
           </div>
           <div>
-            <label for="daWage">Dental assistant, mean hourly wage</label>
+            <label for="daWage">Dental assistant, mean hourly wage <a class="source-pill" href="https://www.bls.gov/oes/tables.htm" target="_blank" rel="noopener noreferrer">Source: BLS OEWS, 2024</a></label>
             <div class="money-input"><span>$</span><input id="daWage" data-field="daWage" type="number" min="0" step="0.01" value="23.49" inputmode="decimal"></div>
             <p class="hint" id="daMeta">SOC 31-9091. Official cross-industry mean. Not a loaded wage.</p>
           </div>
           <div>
-            <label for="receptionistWage">Receptionist, mean hourly wage</label>
+            <label for="receptionistWage">Receptionist, mean hourly wage <a class="source-pill" href="https://www.bls.gov/oes/tables.htm" target="_blank" rel="noopener noreferrer">Source: BLS OEWS, 2024</a></label>
             <div class="money-input"><span>$</span><input id="receptionistWage" data-field="receptionistWage" type="number" min="0" step="0.01" value="21.39" inputmode="decimal"></div>
             <p class="hint" id="recMeta">SOC 43-4171, Offices of Dentists (NAICS 621200). Not a loaded wage.</p>
           </div>
@@ -386,7 +386,7 @@
         <div class="stack">
           <h3>Overhead, remakes, turnaround</h3>
           <div>
-            <label for="overheadPct">Overhead, percent of gross billings</label>
+            <label for="overheadPct">Overhead, percent of gross billings <a class="source-pill" href="https://www.ada.org/resources/research/health-policy-institute/dental-practice-research" target="_blank" rel="noopener noreferrer">Source: ADA Tables 5 and 13, 2025</a></label>
             <input id="overheadPct" data-field="overheadPct" type="number" min="0" max="100" step="0.01" value="57.62" inputmode="decimal">
             <p class="hint" id="overheadMeta"></p>
           </div>
@@ -512,7 +512,7 @@
         </div>
         <div>
           <h3>Studies you can apply, not the starting case volume</h3>
-          <p>McCracken et al., Journal of Prosthodontics 28(2):122–130, published online November 22, 2018. Of 3,731 single-unit crowns that reached try-in, 141 (3.8%) were rejected. 205 dentists in the National Dental Practice-Based Research Network. <a href="https://doi.org/10.1111/jopr.12995">doi:10.1111/jopr.12995</a>. The remake field starts at 8% because that is the one-case calculator’s starting value, not this study.</p>
+          <p>McCracken et al., Journal of Prosthodontics, published online November 22, 2018. 205 dentists evaluated 3,750 single-unit crowns. The remake rate was 3.8%. The conclusions describe that rate as about 4%. <a href="https://pubmed.ncbi.nlm.nih.gov/30412320/">PubMed 30412320</a>. <a href="https://doi.org/10.1111/jopr.12995">doi:10.1111/jopr.12995</a>. The remake field starts at this 3.8%.</p>
           <p>McCracken et al., Journal of the American Dental Association 2017;148(11):788–796.e4. Dentists in that questionnaire reported a mean of 18 crowns a month. Most (59%) reported a remake rate under 2%, and 17% reported a rate over 4%. That is self-report, separate from the 3.8% try-in study. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5793929/">PMC5793929</a>. Units per month start at 25, the one-case calculator’s starting value.</p>
         </div>
         <div>

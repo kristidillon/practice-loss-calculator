@@ -403,7 +403,7 @@ window.PRACTICE_DATA = {
   },
   "defaults": {
     "units": 50,
-    "remakePct": 8,
+    "remakePct": 3.8,
     "adjustMin": 15,
     "productionPerHour": 500,
     "staffHrs": 4,
@@ -439,7 +439,7 @@ window.PRACTICE_DATA = {
     "unitsPerChair": 25,
     "fixedCases": 20,
     "removableCases": 6,
-    "remakesPerMonth": 2,
+    "remakesPerMonth": 1,
     "removableAdjustMin": 30,
     "removableRemakeHours": 2.5,
     "scenarioRemakes": 1,

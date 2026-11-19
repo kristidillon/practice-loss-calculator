@@ -268,6 +268,12 @@ input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 
 .chips { display: flex; flex-wrap: wrap; gap: 8px 16px; }
 .text-btn, .chip { background: none; color: var(--muted); font-size: 13px; padding: 8px 0; min-height: 44px; }
 .text-btn { text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+a.source-pill {
+  display: inline-flex; align-items: center; margin-left: 8px; padding: 2px 8px;
+  border-radius: 999px; background: #e6f3f1; color: #0e6b62; font-size: 12px;
+  font-weight: 600; letter-spacing: 0; text-decoration: none; vertical-align: middle;
+}
+a.source-pill:hover { text-decoration: underline; }
 .delta { margin-top: 32px; }
 .delta-num { font-size: 28px; margin: 8px 0; font-variant-numeric: tabular-nums; }
 .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
