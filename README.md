@@ -2,7 +2,7 @@
 
 A static estimate of what adjustments, remakes, staff time, overhead, and lab turnaround cost a dental practice. It runs entirely in the browser. Open `index.html` directly, or host the repository root on GitHub Pages.
 
-The page is a general information tool. It has no email link, no meeting link, and no lead form. The header is the Dandy wordmark.
+The page is a general information tool. It has no email link, no meeting link, and no lead form. The header reads Practice Loss Calculator; no company branding.
 
 ## Use it
 
@@ -101,7 +101,7 @@ The remake field starts at **3.8%**, the single-unit crown remake rate in McCrac
 
 ### One-case calculator
 
-The comparison formula and slider ranges follow the earlier calculator. The type is the system font stack. The accent is `#0A7C86`. The header wordmark is the word Dandy.
+The comparison formula and slider ranges follow the earlier calculator. The type is the system font stack. The accent is `#0A7C86`. The header wordmark reads Practice Loss Calculator.
 
 ## Assumptions
 
