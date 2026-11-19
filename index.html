@@ -35,7 +35,7 @@
       <p class="kicker">Dental Practice Production/Revenue Loss Calculator</p>
       <h1>What is lost chair time costing your practice?</h1>
       <p class="subhead">Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.</p>
-      <a class="btn btn-accent btn-lg" href="#calculator">Calculate your practice’s loss</a>
+      <a class="btn btn-accent btn-lg" href="#calculator">See my number</a>
     </div>
   </section>
 
@@ -44,15 +44,15 @@
       <ul class="tiles">
         <li>
           <b>19%</b>
-          <span>of hygienists changed employers in the past year<sup><a href="#fn1">1</a></sup></span>
+          <span>of hygienists switched jobs last year<sup><a href="#fn1">1</a></sup></span>
         </li>
         <li>
           <b>82%</b>
-          <span>of dentists lost schedule time to late cancellations and no-shows<sup><a href="#fn2">2</a></sup></span>
+          <span>of dentists lost time to no-shows and late cancels<sup><a href="#fn2">2</a></sup></span>
         </li>
         <li>
           <b>27%</b>
-          <span>struggled to fill open staff positions<sup><a href="#fn2">2</a></sup></span>
+          <span>couldn’t fill open staff roles<sup><a href="#fn2">2</a></sup></span>
         </li>
       </ul>
       <p class="stand">Your lab and workflow shouldn’t contribute to these causes.</p>
@@ -95,7 +95,7 @@
                 <button type="button" class="step" data-step="staffSize" data-dir="1" aria-label="More staff">+</button>
               </div>
             </div>
-            <p class="status" id="zipStatus" role="status">5-digit ZIP, or pick a state.</p>
+            <p class="status" id="zipStatus" role="status"></p>
             <p class="hint">Assumption — enter your own.</p>
           </div>
 
@@ -124,8 +124,6 @@
               <button type="button" class="text-btn" id="printResults">Print / save as PDF</button>
             </div>
             <p class="status" id="copyStatus" role="status"></p>
-            <p class="quiet" id="outRegion"></p>
-            <p class="quiet" id="outVisitNote"></p>
             <p class="sr" id="liveTotal" aria-live="polite"></p>
             <p class="quiet" id="outDayLine" hidden></p>
             <p class="quiet" id="outMonthLine" hidden></p>
@@ -146,39 +144,37 @@
     <p id="scQueue"></p>
   </section>
 
-  <section class="band" id="scenario">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">A comparison you set</p>
-        <h2>With fewer adjustments and remakes.</h2>
-        <p class="lede">Change the remake rate, adjustment time, and turnaround. Everything else stays put. This is a scenario, not a forecast.</p>
-      </div>
-      <div class="card rv">
-        <div class="pair">
-          <div>
-            <label for="scenarioRemake">Remake rate in the scenario (%)</label>
-            <input id="scenarioRemake" data-field="scenarioRemake" type="number" min="0" max="50" step="0.1" value="2" inputmode="decimal">
-            <p class="hint">Starts at 2%, the one-case calculator’s comparison setting. Assumption — enter your own.</p>
-          </div>
-          <div>
-            <label for="scenarioAdjust">Adjustment time in the scenario (min)</label>
-            <input id="scenarioAdjust" data-field="scenarioAdjust" type="number" min="0" max="60" step="1" value="5" inputmode="numeric">
-            <p class="hint">Starts at 5 minutes, the one-case calculator’s comparison setting. Assumption — enter your own.</p>
-          </div>
-        </div>
-        <div>
-          <label for="scenarioTurnaround">Turnaround in the scenario (days)</label>
-          <input id="scenarioTurnaround" data-field="scenarioTurnaround" type="number" min="0" max="90" step="1" value="7" inputmode="numeric">
-          <p class="hint">Assumption — enter your own. Days change the dollar total when extra visits, temps, or a carrying rate are set. They always change the billings sitting in the queue.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section id="area">
     <div class="wrap">
       <details class="finetune">
         <summary>Fine-tune</summary>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="scenarioRemake">Remake rate in the comparison (%)</label>
+              <div class="sub">The “With fewer remakes” bar uses this. Starts at 2%. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="scenarioRemake" data-field="scenarioRemake" type="number" min="0" max="50" step="0.1" value="2" inputmode="decimal"><span class="unit">%</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="scenarioAdjust">Adjustment time in the comparison (min)</label>
+              <div class="sub">Starts at 5 minutes. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="scenarioAdjust" data-field="scenarioAdjust" type="number" min="0" max="60" step="1" value="5" inputmode="numeric"><span class="unit">min</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="scenarioTurnaround">Turnaround in the comparison (days)</label>
+              <div class="sub">Starts at 7 days. Changes the bar when extra visits, temps, or a carrying rate are set. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="scenarioTurnaround" data-field="scenarioTurnaround" type="number" min="0" max="90" step="1" value="7" inputmode="numeric"><span class="unit">days</span></div>
+          </div>
+        </div>
         <div class="field">
           <div class="field-top">
             <div>
@@ -507,7 +503,8 @@
   <p class="footnote">
     <span id="fn1"><sup>1</sup> DentalPost, 2024 Dental Hygienist Salary Survey, fielded July–October 2023, 1,802 registered dental hygienists. 19.35% changed employers in the previous 12 months. <a href="https://www.dental-post.com/hubfs/salarysurvey2024/ss2024-dentalhygienist.pdf">Survey PDF</a>.</span>
     <span id="fn2"><sup>2</sup> ADA Health Policy Institute, Economic Outlook and Emerging Issues in Dentistry, December 2023. 923 dentists, December 11–17, 2023. Question: which factors prevented the appointment schedule from reaching 100% last week. The reasons were no-shows or cancellations with less than 24 hours’ notice (82%), cancellations with more than 24 hours’ notice (51%), not enough patients making appointments (37%), and trouble filling vacant staff positions (27%). <a href="https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/dec2023_hpi_economic_outlook_dentistry_slides.pdf">Slides</a>. A 2017 ranking of the top causes of lost production was not used; this poll is the verified source.</span>
-    <span id="fn3"><sup>3</sup> The annual total is chair time priced at gross billings per practice hour, plus staff wages for that time. ADA gross billings already include overhead, so adding the 57.62% share again would count it twice. The line “of which, overhead that still had to be paid” is that share of the lost production. It is not part of the total. Staff wages are added because the billings figure is production, not the wage paid to assistants and receptionists for those hours.</span>
+    <span id="fn3"><sup>3</sup> The annual total is chair time priced at gross billings per practice hour, plus staff wages for that time. ADA gross billings already include overhead, so the 57.62% share is not added on top. Staff wages are added because the billings figure is production, not the wage paid to assistants and receptionists for those hours.</span>
+    <span>Wages follow the state for the ZIP, from BLS OEWS May 2024. Production per hour and the overhead share are U.S. figures; ADA does not publish them by state. Minnesota, Montana, and Vermont have no published dental-office receptionist wage, so the U.S. mean of $21.39 is used there. Military mail uses the U.S. means. The estimate includes 1 assumed extra visit per case when lab turnaround is longer than 7 days. That visit count is an assumption.</span>
     <span>Averages used in the calculator: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</span>
   </p>
 </footer>

@@ -258,14 +258,6 @@
 
     $("outCrowns").textContent = fmt(est.hours, 1);
     animateAnnual(Math.round(est.chairDollars) + Math.round(est.staffDollars) + Math.round(est.otherDollars));
-    $("outRegion").textContent = regionSentence();
-
-    if (now.visits > 0) {
-      var visitDollars = now.visitProduction + now.visitStaff + now.visitOverhead;
-      $("outVisitNote").textContent = "Includes " + fmt(now.visits, 2) + " assumed extra visit" + (now.visits === 1 ? "" : "s") + " per case, because turnaround is longer than " + fmt(state.extraVisitAfterDays, 0) + " days. Assumption — enter your own.";
-    } else {
-      $("outVisitNote").textContent = "Extra visits are not in the dollar total. Set them under Your area if a case comes back while you wait on the lab.";
-    }
 
     if (document.activeElement !== $("productionPerDay")) {
       $("productionPerDay").value = String(Math.round(state.productionPerHour * state.hoursPerDay));
@@ -333,18 +325,8 @@
     var rows = $("rows");
     rows.textContent = "";
     addRow(rows, "", "Chair time", "", est.chairDollars, null);
-    addRow(rows, "", "Of which, overhead that still had to be paid", "", est.overheadDollars, null);
-    var info = rows.lastElementChild;
-    info.classList.add("info");
     addRow(rows, "", "Staff", "", est.staffDollars, null);
     if (est.otherDollars > 0) addRow(rows, "", "Lab, temps, and carrying cost", "", est.otherDollars, null);
-    var infoName = info.querySelector(".name");
-    var sup = document.createElement("sup");
-    var fn = document.createElement("a");
-    fn.href = "#fn3";
-    fn.textContent = "3";
-    sup.appendChild(fn);
-    infoName.appendChild(sup);
 
     $("overlapNote").textContent = "Overhead is " + money(est.overheadDollars) + " of the lost production and is not added to the total. Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
 
@@ -455,7 +437,7 @@
       return false;
     }
     applyRegion(found.code, found.zip);
-    status(wageRecord().name + ".");
+    status("");
     return true;
   }
 
@@ -468,7 +450,7 @@
     if (!$("statePick").value) return;
     $("zip").value = "";
     applyRegion($("statePick").value, "");
-    status(wageRecord().name + ".");
+    status("");
   });
 
   document.body.addEventListener("input", function (event) {
@@ -526,8 +508,7 @@
       "Hours lost: " + $("outCrowns").textContent,
       rows,
       "Production lost now: " + $("nowProd").textContent,
-      "With fewer remakes: " + $("scProd").textContent,
-      $("outRegion").textContent
+      "With fewer remakes: " + $("scProd").textContent
     ].join("\n");
   }
   function markCopied() { $("copyStatus").textContent = "Copied."; }
