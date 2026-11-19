@@ -111,10 +111,13 @@ const scaled = scaledEstimate(Object.assign({}, base, {
   providers: 1,
   operatories: 1,
   staffSize: 2,
-  unitsPerChair: 10,
-  unitsTouched: false,
-  remakePct: 0,
+  fixedCases: 10,
+  removableCases: 0,
+  remakesPerMonth: 0,
   adjustMin: 60,
+  removableAdjustMin: 30,
+  remakeHours: 1.5,
+  removableRemakeHours: 2.5,
   extraVisits: 0,
   daWage: 23.49,
   receptionistWage: 21.39,
@@ -131,5 +134,38 @@ assert.ok(Math.abs(scaled.blended - 22.44) < 1e-9);
 assert.ok(Math.abs(scaled.staffDollars - 240 * 22.44) < 1e-6);
 assert.ok(Math.abs(scaled.overheadDollars - 60000 * 0.5762) < 1e-4);
 assert.ok(Math.abs(scaled.total - (scaled.chairDollars + scaled.staffDollars)) < 1e-4);
+
+const split = scaledEstimate(Object.assign({}, base, {
+  operatories: 1,
+  staffSize: 0,
+  fixedCases: 10,
+  removableCases: 10,
+  remakesPerMonth: 2,
+  adjustMin: 0,
+  removableAdjustMin: 0,
+  remakeHours: 1,
+  removableRemakeHours: 2,
+  extraVisits: 0,
+  productionPerHour: 100
+}));
+assert.strictEqual(split.hours, 36);
+assert.strictEqual(split.chairDollars, 3600);
+
+const visitsOnly = scaledEstimate(Object.assign({}, base, {
+  operatories: 1,
+  staffSize: 0,
+  fixedCases: 10,
+  removableCases: 0,
+  remakesPerMonth: 0,
+  adjustMin: 0,
+  removableAdjustMin: 0,
+  turnaroundDays: 14,
+  extraVisits: 1,
+  extraVisitAfterDays: 7,
+  extraVisitMin: 30,
+  productionPerHour: 100
+}));
+assert.strictEqual(visitsOnly.hours, 60);
+assert.strictEqual(visitsOnly.loss.visits, 1);
 
 console.log("model tests passed");

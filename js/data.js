@@ -437,6 +437,12 @@ window.PRACTICE_DATA = {
     "providers": 2,
     "staffSize": 3,
     "unitsPerChair": 25,
+    "fixedCases": 20,
+    "removableCases": 6,
+    "remakesPerMonth": 2,
+    "removableAdjustMin": 30,
+    "removableRemakeHours": 2.5,
+    "scenarioRemakes": 1,
     "receptionistWage": 21.39,
     "hygPerChairHour": 1,
     "receptionistPerChairHour": 1

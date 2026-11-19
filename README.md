@@ -7,10 +7,10 @@ The page is a general information tool. It has no email link, no meeting link, a
 ## Use it
 
 1. Open `index.html` in a browser, or the GitHub Pages URL after the steps below.
-2. Enter a 5-digit U.S. ZIP, or choose a state. State wages fill in from BLS. You can edit every figure.
-3. Set monthly crown and bridge units, remake rate, and minutes adjusting at the seat. The annual estimate, the monthly and office-day equivalents, and the breakdown update as you type.
-4. Open **Your area** to edit production, wages, chair time, overhead, lab fee, and turnaround.
-5. Set a comparison remake rate, adjustment time, and turnaround under **With fewer adjustments and remakes**.
+2. Enter a 5-digit U.S. ZIP and continue. State wages fill in from BLS May 2024. You can edit every figure.
+3. Enter office size, monthly fixed and removable cases, turnaround, adjustment minutes, and remakes. The annual estimate updates as you type. Case counts replace the old 25-units-per-chair starting point. Remakes are a count, not a percent.
+4. Open **Fine-tune** to edit production, wages, the separate removable adjustment minutes and remake chair time, overhead, lab fee, and the comparison.
+5. The “With fewer remakes” bar uses the comparison remake count, adjustment minutes, and turnaround inside Fine-tune.
 6. The one-case comparison lower on the page uses the original gap formula (chair time and chasing hours only).
 
 `index.html?zip=10001` opens with that ZIP already applied.
@@ -32,7 +32,7 @@ A `.nojekyll` file is included so GitHub Pages serves the files as-is.
 
 For the current pace, not as a gap against a target:
 
-- **Lost production** — chair hours in adjustments and remakes, times gross billings per practice hour.
+- **Lost production** — chair hours from the cases you enter. Fixed and removable cases use their own adjustment minutes and remake chair time. Remake hours are the remake count times those chair times, split between the two types in proportion to the cases. Extra-visit hours are added when turnaround is longer than the day threshold.
 - **Staff wages** — those chair hours times assistant hours per chair hour times the dental-assistant wage, plus any hygienist hours you enter times the hygienist wage.
 - **Overhead** — shown beside lost production as the share of those billings that is overhead. It is not added to the annual total, because gross billings per hour already include it.
 - **Lab fees** — remakes times the lab fee you enter (starts at $0).
