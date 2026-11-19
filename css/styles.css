@@ -134,7 +134,7 @@ h3 { font-size: 17px; }
 .hbar-row b { font-size: 15px; font-variant-numeric: tabular-nums; }
 .track { height: 8px; background: #e4e4e0; border-radius: 99px; overflow: hidden; }
 .track i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; }
-.hbar-row:last-child .track i { background: #111; }
+.hbar-row:last-child .track i { background: #f2b84b; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 20px; }
 .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .sticky-total { display: none; }
@@ -304,6 +304,8 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 .band-top .big { color: #fff; font-size: clamp(64px, 10vw, 92px); }
 .band-top .pace { color: rgba(255,255,255,.9); max-width: 28em; margin-left: auto; margin-right: auto; }
 .band-top .substats p { background: rgba(255,255,255,.14); color: #fff; }
+.band-top .substats b { color: #fff; }
+.band-top .substats span { color: rgba(255,255,255,.75); }
 .band-top .wage-pill { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; }
 .band-top .wage-pill a { color: #f2b84b; }
 .band-top .staff-line { color: rgba(255,255,255,.78); }
@@ -314,7 +316,8 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 }
 .wage-pill a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .staff-line { margin-top: 10px; color: var(--muted); font-size: 13px; min-height: 1.4em; }
-.stage.overlap { margin-top: -52px; position: relative; }
+.calc-page #calculator { padding-top: 0; }
+.stage.overlap { margin-top: -48px; padding-top: 0; position: relative; }
 .recover { text-align: center; font-size: 16px; }
 .recover { background: #f2b84b; color: #111; border-radius: 12px; padding: 12px 16px; font-weight: 600; }
 .stage { max-width: 720px; margin: 0 auto; padding: 16px 20px 8px; display: grid; gap: 20px; }
