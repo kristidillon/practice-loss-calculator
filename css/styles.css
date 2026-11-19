@@ -61,8 +61,19 @@ h3 { font-size: 17px; }
 .gate-card .lead { margin-top: 16px; color: var(--muted); font-size: 16px; }
 .gate-card .next { margin-top: 12px; }
 .gate-card label { display: block; margin-top: 24px; font-size: 14px; }
-.gate-card input { margin-top: 8px; }
+.gate-card .zip-field {
+  display: block; width: 100%; height: 52px; margin-top: 8px; padding: 0 16px;
+  border: 1px solid #d7dee5; border-radius: 12px; background: #fff;
+  font-size: 17px; line-height: normal;
+}
+.gate-card .zip-field::placeholder { color: #8a939c; }
+.gate-card .zip-field:focus,
+.gate-card .zip-field:focus-visible {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 107, 98, .28);
+}
 .btn-block { width: 100%; margin-top: 16px; }
+.page-hint { color: var(--muted); font-size: 14px; line-height: 1.45; margin: 8px auto 0; }
 .step-block { display: grid; gap: 22px; }
 .step-kicker { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
 .step-kicker span:first-child { color: var(--ink); letter-spacing: 0; text-transform: none; font-size: 15px; font-weight: 600; }
@@ -124,7 +135,8 @@ h3 { font-size: 17px; }
 .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .sticky-total { display: none; }
 @media (max-width: 800px) {
-  .wage-block { text-align: left; }
+  .nav-row { flex-direction: column; align-items: flex-start; }
+  .wage-block { text-align: left; width: 100%; }
   .calc { grid-template-columns: 1fr; gap: 32px; }
   .panel { padding: 22px 18px 24px; }
   .hbar-row { grid-template-columns: 1fr auto; }
@@ -194,7 +206,7 @@ select { cursor: pointer; }
   line-height: .95; color: var(--accent); font-variant-numeric: tabular-nums;
 }
 .hours { margin-top: 16px; font-size: 17px; }
-.rows { margin-top: 24px; }
+.rows { margin-top: 24px; min-height: 112px; }
 .break-row {
   display: grid; grid-template-columns: 1fr auto; gap: 16px;
   align-items: baseline; padding: 16px 0; border-top: 1px solid var(--hair);
@@ -274,8 +286,50 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn, .track i { transition: none; }
+  .btn, .track i, .rise { transition: none; animation: none; }
 }
+
+.calc-page { background: linear-gradient(180deg, #eef2f4 0%, #fff 520px); }
+.stage-head { text-align: center; padding: 32px 20px 4px; }
+.stage-head .wordmark { display: block; font-size: 22px; }
+.wage-pill {
+  display: flex; width: fit-content; align-items: center; gap: 6px;
+  margin: 16px auto 0; padding: 8px 16px; border-radius: 999px; background: #fff;
+  box-shadow: 0 8px 24px rgba(17, 17, 17, .06); font-size: 14px;
+}
+.wage-pill a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.staff-line { margin-top: 10px; color: var(--muted); font-size: 13px; min-height: 1.4em; }
+.stage { max-width: 720px; margin: 0 auto; padding: 16px 20px 8px; display: grid; gap: 20px; }
+.calc-page .wrap, .calc-page .wrap.wide { max-width: 720px; }
+.card {
+  background: #fff; border-radius: 20px; box-shadow: 0 12px 32px rgba(17, 17, 17, .06);
+  padding: 32px; display: grid; gap: 18px;
+}
+@media (max-width: 720px) { .card { padding: 20px; } }
+#result { text-align: center; }
+#result .break-row, #result .hbar-row { text-align: left; }
+.substats { justify-content: center; flex-wrap: wrap; }
+.substats p { margin: 0; background: #f3f6f7; border-radius: 999px; padding: 8px 14px; }
+.actions { justify-content: center; }
+.calc-page .stepper {
+  height: 52px; border-bottom: 0; gap: 8px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+.calc-page .step {
+  width: 44px; height: 44px; border-radius: 22px; background: #e6f3f1; color: var(--accent);
+}
+.calc-page .step:hover { background: #d7ebe8; }
+.calc-page .stepper input {
+  height: 52px; font-size: 20px; font-weight: 600; border-bottom: 1px solid #e4eaee; background: transparent;
+}
+.calc-page .card label { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.02em; margin-bottom: 8px; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise .5s var(--ease) both; }
+.stage .rise:nth-child(2) { animation-delay: .06s; }
+.stage .rise:nth-child(3) { animation-delay: .12s; }
 @media (prefers-reduced-motion: no-preference) {
   .track i { transition: width .45s var(--ease); }
 }

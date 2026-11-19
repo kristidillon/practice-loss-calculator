@@ -7,13 +7,13 @@ The page is a general information tool. It has no email link, no meeting link, a
 ## Use it
 
 1. Open `index.html` in a browser, or the GitHub Pages URL after the steps below.
-2. Enter a 5-digit U.S. ZIP and continue. State wages fill in from BLS May 2024. You can edit every figure.
+2. Enter a 5-digit U.S. ZIP on the opening page and continue. That opens `calculator.html?zip=` in the same tab. State wages fill in from BLS May 2024. You can edit every figure.
 3. Enter office size, monthly fixed and removable cases, turnaround, adjustment minutes, and remakes. The annual estimate updates as you type. Case counts replace the old 25-units-per-chair starting point. Remakes are a count, not a percent.
 4. Open **Fine-tune** to edit production, wages, the separate removable adjustment minutes and remake chair time, overhead, lab fee, and the comparison.
 5. The “With fewer remakes” bar uses the comparison remake count, adjustment minutes, and turnaround inside Fine-tune.
 6. The one-case comparison lower on the page uses the original gap formula (chair time and chasing hours only).
 
-`index.html?zip=10001` opens with that ZIP already applied.
+`calculator.html?zip=10001` opens that ZIP. A missing or unknown ZIP returns to `index.html`.
 
 There is no build step and no server. Scripts are plain files so the page works from `file://` as well as from GitHub Pages. Do not rename the `js/` or `css/` folders without updating the paths in `index.html`.
 
