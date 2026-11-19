@@ -19,97 +19,74 @@
 <header class="nav">
   <div class="wrap">
     <a class="brand wordmark" href="#top">Dandy</a>
-    <nav class="nav-links" aria-label="Page">
-      <a href="#breakdown">Breakdown</a>
-      <a href="#area">Your area</a>
-      <a href="#sources">Sources</a>
-    </nav>
   </div>
 </header>
 
 <main id="top">
   <section class="hero">
     <div class="wrap intro">
-      <p class="eyebrow">A practice estimate</p>
       <h1>Dental Practice Production/Revenue Loss Calculator</h1>
-      <p>In DentalPost’s survey of 1,802 registered dental hygienists, fielded from July through October 2023, 19.35% said they had changed employers in the previous 12 months.<sup><a href="#fn1">1</a></sup> Schedules also lose production for reasons dentists name directly. In the ADA Health Policy Institute poll of 923 dentists, collected December 11–17, 2023, the reasons a schedule was not full the previous week were most often no-shows or cancellations with less than 24 hours’ notice (82%), cancellations with more than 24 hours’ notice (51%), not enough patients making appointments (37%), and trouble filling vacant staff positions (27%).<sup><a href="#fn2">2</a></sup></p>
-      <p class="lede">Your lab and workflow shouldn’t contribute to these causes.</p>
+      <p class="subhead">An estimate from national and state averages. Edit any assumption.</p>
+      <p>In DentalPost’s survey of 1,802 registered dental hygienists, fielded from July through October 2023, <strong>19.35%</strong> said they had changed employers in the previous 12 months.<sup><a href="#fn1">1</a></sup> Schedules also lose production for reasons dentists name directly. In the ADA Health Policy Institute poll of 923 dentists, collected December 11–17, 2023, the reasons a schedule was not full the previous week were most often no-shows or cancellations with less than 24 hours’ notice (<strong>82%</strong>), cancellations with more than 24 hours’ notice (<strong>51%</strong>), not enough patients making appointments (<strong>37%</strong>), and trouble filling vacant staff positions (<strong>27%</strong>).<sup><a href="#fn2">2</a></sup></p>
+      <p class="stand">Your lab and workflow shouldn’t contribute to these causes.</p>
       <a class="btn btn-accent btn-lg" href="#calculator">Calculate your practice’s loss</a>
     </div>
   </section>
 
   <section id="calculator">
-    <div class="wrap opening">
-      <div>
-        <form id="zipForm" action="#result">
-          <label for="zip">State or ZIP</label>
-          <div class="zip-row">
-            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP" aria-describedby="zipStatus">
-            <button class="btn btn-accent" type="submit">Use ZIP</button>
-          </div>
-        </form>
-        <div class="state-pick">
-          <label for="statePick">State</label>
-          <select id="statePick">
+    <div class="wrap">
+      <div class="grid4">
+        <div class="loc">
+          <form id="zipForm" action="#result">
+            <label for="zip">State or ZIP</label>
+            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP code" aria-describedby="zipStatus">
+            <button type="submit">Apply ZIP</button>
+          </form>
+          <select id="statePick" aria-label="State">
             <option value="">Select a state</option>
           </select>
+          <p class="status" id="zipStatus" role="status"></p>
         </div>
-        <p class="status" id="zipStatus" role="status"></p>
-        <div class="quad">
-          <div>
-            <label for="operatories">Operatories</label>
-            <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
-            <p class="hint"><span class="chip assume">Assumption — enter your own</span></p>
-          </div>
-          <div>
-            <label for="providers">Providers</label>
-            <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
-            <p class="hint">Dentists and hygienists. <span class="chip assume">Assumption — enter your own</span></p>
-          </div>
-          <div>
-            <label for="staffSize">Staff size</label>
-            <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
-            <p class="hint">People who are not providers. <span class="chip assume">Assumption — enter your own</span></p>
-          </div>
+        <div>
+          <label for="operatories">Operatories</label>
+          <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
+          <p class="hint">Assumption — enter your own</p>
+        </div>
+        <div>
+          <label for="providers">Providers</label>
+          <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
+          <p class="hint">Dentists and hygienists. Assumption — enter your own</p>
+        </div>
+        <div>
+          <label for="staffSize">Staff size</label>
+          <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
+          <p class="hint">Not providers. Assumption — enter your own</p>
         </div>
       </div>
 
       <div class="result" id="result" aria-live="polite">
-        <div class="lbl">Step 3 · Estimated loss per year</div>
+        <div class="lbl">Estimated loss per year</div>
         <div class="big" id="outAnnual">$0</div>
-        <p class="explain" id="outDayLine">About $0 a month, and about $0 an office day.</p>
-        <p class="explain" id="outCrowns">About 0 crowns of chair time.</p>
-        <p class="region-line" id="outRegion">U.S. wage averages. Production starts at $500 until you enter a ZIP.</p>
-        <p class="explain" id="outVisitNote"></p>
-        <div class="monthly">
-          <div class="dot" aria-hidden="true"></div>
-          <p id="outMonthLine">Every month at this pace, the estimate is about <b>$0</b>.</p>
-        </div>
+        <p class="hours" id="outCrowns">0 hours lost</p>
+        <div class="rows" id="rows"></div>
+        <p class="gain" id="outProdGap"></p>
+        <p class="quiet" id="outRegion"></p>
+        <p class="quiet" id="outVisitNote"></p>
+        <p class="quiet" id="outDayLine" hidden></p>
+        <p class="quiet" id="outMonthLine" hidden></p>
       </div>
     </div>
   </section>
 
-  <section id="breakdown">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">The breakdown</p>
-        <h2>Where the estimate goes.</h2>
-        <p class="lede">Lost production, staff wages, overhead, lab fees, and turnaround. Each row is part of the annual figure above.</p>
-      </div>
-      <div class="card rv">
-        <div class="bars" id="bars"></div>
-        <div class="legend" aria-hidden="true">
-          <span><b style="background:#0A7C86"></b>Chair time</span>
-          <span><b style="background:#1D1D1F"></b>Staff wages</span>
-          <span><b style="background:#6E6E73"></b>Overhead</span>
-          <span><b style="background:#C7C7CC"></b>Lab fees</span>
-          <span><b style="background:#3A3A3F"></b>Turnaround</span>
-        </div>
-        <div class="rows" id="rows"></div>
-        <p class="note" id="overlapNote"></p>
-        <p class="note" id="buildFormula"></p>
-      </div>
-    </div>
+  <section id="breakdown" hidden>
+    <div id="bars"></div>
+    <p id="overlapNote"></p>
+    <p id="buildFormula"></p>
+    <p id="outDiff"></p>
+    <p id="nowTotal"></p>
+    <p id="scTotal"></p>
+    <p id="nowQueue"></p>
+    <p id="scQueue"></p>
   </section>
 
   <section class="band" id="scenario">
@@ -132,25 +109,11 @@
             <p class="hint">Starts at 5 minutes, the one-case calculator’s comparison setting. Assumption — enter your own.</p>
           </div>
         </div>
-        <div style="margin-top:12px">
+        <div>
           <label for="scenarioTurnaround">Turnaround in the scenario (days)</label>
           <input id="scenarioTurnaround" data-field="scenarioTurnaround" type="number" min="0" max="90" step="1" value="7" inputmode="numeric">
           <p class="hint">Assumption — enter your own. Days change the dollar total when extra visits, temps, or a carrying rate are set. They always change the billings sitting in the queue.</p>
         </div>
-        <div class="compare">
-          <article>
-            <div class="k">Now</div>
-            <strong id="nowTotal">$0</strong>
-            <p id="nowQueue">Billings in the queue: $0. Not added to the loss.</p>
-          </article>
-          <article>
-            <div class="k">This scenario</div>
-            <strong id="scTotal">$0</strong>
-            <p id="scQueue">Billings in the queue: $0. Not added to the loss.</p>
-          </article>
-        </div>
-        <p class="diff" id="outDiff"></p>
-        <p class="note" id="outProdGap"></p>
       </div>
     </div>
   </section>

@@ -187,9 +187,6 @@
   function addRow(parent, color, title, detail, annual, monthly) {
     var row = document.createElement("div");
     row.className = "break-row";
-    var swatch = document.createElement("i");
-    swatch.className = "swatch";
-    swatch.style.background = color;
     var name = document.createElement("div");
     name.className = "name";
     name.textContent = title;
@@ -201,12 +198,19 @@
     var nums = document.createElement("div");
     nums.className = "nums";
     var year = document.createElement("b");
-    year.textContent = money(annual) + " / yr";
-    var month = document.createElement("span");
-    month.textContent = money(monthly) + " / mo";
+    year.textContent = monthly == null ? money(annual) : money(annual) + " / yr";
     nums.appendChild(year);
-    nums.appendChild(month);
-    row.appendChild(swatch);
+    if (monthly != null) {
+      var month = document.createElement("span");
+      month.textContent = money(monthly) + " / mo";
+      nums.appendChild(month);
+    }
+    if (color) {
+      var swatch = document.createElement("i");
+      swatch.className = "swatch";
+      swatch.style.background = color;
+      row.appendChild(swatch);
+    }
     row.appendChild(name);
     row.appendChild(nums);
     parent.appendChild(row);
@@ -242,14 +246,12 @@
     var rec = wageRecord();
 
     animateAnnual(est.total);
-    $("outDayLine").textContent = "About " + money(est.monthly) + " a month, and about " + money(eq.officeDays > 0 ? est.total / eq.officeDays : 0) + " an office day.";
-    $("outCrowns").textContent = "Time lost: " + fmt(est.hours, 1) + " hours a year. Chair time in that total is " + money(est.chairDollars) + ". Staff is " + money(est.staffDollars) + ". Overhead is " + money(est.overheadDollars) + ".";
+    $("outCrowns").textContent = fmt(est.hours, 1) + " hours lost";
     $("outRegion").textContent = regionSentence();
-    $("outMonthLine").innerHTML = "Every month at this pace, the estimate is about <b>" + money(est.monthly) + "</b>.";
 
     if (now.visits > 0) {
       var visitDollars = now.visitProduction + now.visitStaff + now.visitOverhead;
-      $("outVisitNote").textContent = "Includes " + fmt(now.visits, 2) + " assumed extra visit" + (now.visits === 1 ? "" : "s") + " per case, because turnaround is longer than " + fmt(state.extraVisitAfterDays, 0) + " days. That visit count is an assumption. It is " + money(visitDollars) + " of the annual estimate.";
+      $("outVisitNote").textContent = "Includes " + fmt(now.visits, 2) + " assumed extra visit" + (now.visits === 1 ? "" : "s") + " per case, because turnaround is longer than " + fmt(state.extraVisitAfterDays, 0) + " days. Assumption — enter your own.";
     } else {
       $("outVisitNote").textContent = "Extra visits are not in the dollar total. Set them under Your area if a case comes back while you wait on the lab.";
     }
@@ -319,12 +321,9 @@
 
     var rows = $("rows");
     rows.textContent = "";
-    addRow(rows, "#0A7C86", "Chair time", "Hours lost to adjustments, remakes, and extra visits, priced at production per hour.", est.chairDollars, est.chairDollars / 12);
-    addRow(rows, "#1D1D1F", "Staff", "Those hours times staff size divided by operatories, at the average assistant and receptionist wage.", est.staffDollars, est.staffDollars / 12);
-    addRow(rows, "#6E6E73", "Overhead", "The overhead percent applied to the chair-time dollars.", est.overheadDollars, est.overheadDollars / 12);
-    addRow(rows, "#C7C7CC", "Lab remake fees", state.labFee > 0 ? "Your lab fee times remakes." : "Lab fee is $0 until you enter one. Assumption — enter your own.", est.loss.labCost, est.loss.labCost / 12);
-    addRow(rows, "#3A3A3F", "Temps and delay", "Temp cost and carrying cost. Extra-visit chair time is in the chair and staff rows.", est.otherDollars - est.loss.labCost, (est.otherDollars - est.loss.labCost) / 12);
-    addRow(rows, "transparent", "Total", "Staff wages can also sit inside overhead. See the note.", est.total, est.monthly);
+    addRow(rows, "", "Chair time", "", est.chairDollars, null);
+    addRow(rows, "", "Staff", "", est.staffDollars, null);
+    addRow(rows, "", "Overhead", "", est.overheadDollars, null);
 
     $("overlapNote").textContent = "Overhead here is a percent of the lost production dollars, so it is not the same dollars as the staff line. If you leave staff inside overhead only, the annual estimate is " + money(est.total - est.staffDollars) + ". Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
 
