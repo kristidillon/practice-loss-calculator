@@ -130,6 +130,6 @@ assert.strictEqual(scaled.chairDollars, 60000);
 assert.ok(Math.abs(scaled.blended - 22.44) < 1e-9);
 assert.ok(Math.abs(scaled.staffDollars - 240 * 22.44) < 1e-6);
 assert.ok(Math.abs(scaled.overheadDollars - 60000 * 0.5762) < 1e-4);
-assert.ok(Math.abs(scaled.total - (scaled.chairDollars + scaled.staffDollars + scaled.overheadDollars)) < 1e-4);
+assert.ok(Math.abs(scaled.total - (scaled.chairDollars + scaled.staffDollars)) < 1e-4);
 
 console.log("model tests passed");

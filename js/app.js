@@ -245,7 +245,7 @@
     var original = Model.originalComparison(state);
     var rec = wageRecord();
 
-    animateAnnual(est.total);
+    animateAnnual(Math.round(est.chairDollars) + Math.round(est.staffDollars) + Math.round(est.otherDollars));
     $("outCrowns").textContent = fmt(est.hours, 1) + " hours lost";
     $("outRegion").textContent = regionSentence();
 
@@ -322,10 +322,20 @@
     var rows = $("rows");
     rows.textContent = "";
     addRow(rows, "", "Chair time", "", est.chairDollars, null);
+    addRow(rows, "", "Of which, overhead that still had to be paid", "", est.overheadDollars, null);
+    var info = rows.lastElementChild;
+    info.classList.add("info");
     addRow(rows, "", "Staff", "", est.staffDollars, null);
-    addRow(rows, "", "Overhead", "", est.overheadDollars, null);
+    if (est.otherDollars > 0) addRow(rows, "", "Lab, temps, and carrying cost", "", est.otherDollars, null);
+    var infoName = info.querySelector(".name");
+    var sup = document.createElement("sup");
+    var fn = document.createElement("a");
+    fn.href = "#fn3";
+    fn.textContent = "3";
+    sup.appendChild(fn);
+    infoName.appendChild(sup);
 
-    $("overlapNote").textContent = "Overhead here is a percent of the lost production dollars, so it is not the same dollars as the staff line. If you leave staff inside overhead only, the annual estimate is " + money(est.total - est.staffDollars) + ". Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
+    $("overlapNote").textContent = "Overhead is " + money(est.overheadDollars) + " of the lost production and is not added to the total. Queue of billings while cases are out: " + money(now.queueBillings) + ". That queue is not in the total" + (state.carryRatePct > 0 ? " except through the carrying rate (" + money(now.carryCost) + " a year)." : ".");
 
     $("buildFormula").textContent = fmt(now.unitsYear, 0) + " units a year. Adjustments " + fmt(now.adjustmentHours, 1) + " hours. Remakes " + fmt(now.remakesYear, 1) + " × " + fmt(state.remakeHours, 2) + " hours. Production " + money(state.productionPerHour) + "/hour. Overhead " + fmt(state.overheadPct, 2) + "%. Extra visits counted: " + fmt(now.visits, 2) + ".";
 
@@ -339,10 +349,8 @@
       : (diff > 0
         ? "About " + money(diff) + " less per year in this scenario."
         : "About " + money(-diff) + " more per year in this scenario.");
-    var prodGap = est.chairDollars - estSc.chairDollars;
-    $("outProdGap").textContent = Math.round(prodGap) === 0
-      ? "Production value tied to that chair time is the same in both."
-      : "Production tied to the lost chair time is " + money(est.chairDollars) + " now and " + money(estSc.chairDollars) + " in this scenario — " + money(Math.abs(prodGap)) + (prodGap > 0 ? " less production lost." : " more production lost.");
+    $("nowProd").textContent = money(est.chairDollars);
+    $("scProd").textContent = money(estSc.chairDollars);
 
     $("deltaDollars").textContent = money(original.dollars);
     $("deltaHours").textContent = fmt(original.chairHours, 0);
@@ -408,6 +416,7 @@
     var us = document.createElement("option");
     us.value = "US";
     us.textContent = "U.S. average";
+    us.selected = true;
     select.appendChild(us);
     Object.keys(DATA.wages.states).sort(function (a, b) {
       return DATA.wages.states[a].name.localeCompare(DATA.wages.states[b].name);
@@ -425,30 +434,27 @@
     node.classList.toggle("bad", !!bad);
   }
 
-  function goToResult() {
-    $("result").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+  function applyZipValue(raw) {
+    var found = lookupZip(raw);
+    if (found.error) {
+      status(found.error);
+      return false;
+    }
+    applyRegion(found.code, found.zip);
+    status(wageRecord().name + ".");
+    return true;
   }
 
   $("zip").addEventListener("input", function () {
-    $("zip").value = $("zip").value.replace(/\D/g, "").slice(0, 5);
-  });
-  $("zipForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-    var found = lookupZip($("zip").value);
-    if (found.error) {
-      status(found.error, true);
-      if (found.unmatched) $("statePick").focus();
-      return;
-    }
-    applyRegion(found.code, found.zip);
-    var rec = wageRecord();
-    status(found.via + " " + found.zip + " → " + rec.name + ". Wages are filled in. You can edit every figure.");
-    goToResult();
+    var digits = $("zip").value.replace(/\D/g, "").slice(0, 5);
+    $("zip").value = digits;
+    if (digits.length === 5) applyZipValue(digits);
   });
   $("statePick").addEventListener("change", function () {
     if (!$("statePick").value) return;
+    $("zip").value = "";
     applyRegion($("statePick").value, "");
-    status(wageRecord().name + " wages are filled in. Production and overhead stay national.");
+    status(wageRecord().name + ".");
   });
 
   document.body.addEventListener("input", function (event) {
@@ -487,7 +493,8 @@
 
   var params = new URLSearchParams(window.location.search);
   if (params.get("zip")) {
-    $("zip").value = params.get("zip").replace(/\D/g, "").slice(0, 5);
-    $("zipForm").dispatchEvent(new Event("submit", { cancelable: true }));
+    var initialZip = params.get("zip").replace(/\D/g, "").slice(0, 5);
+    $("zip").value = initialZip;
+    if (initialZip.length === 5) applyZipValue(initialZip);
   }
 })();

@@ -176,7 +176,8 @@
     var staffDollars = staffHours * blended;
     var overheadDollars = chairDollars * Math.max(0, num(input.overheadPct)) / 100;
     var otherDollars = loss.labCost + loss.tempCost + loss.carryCost;
-    var total = chairDollars + staffDollars + overheadDollars + otherDollars;
+    // Billings per hour already include overhead, so the share is reported and not added.
+    var total = chairDollars + staffDollars + otherDollars;
     return {
       units: units,
       chairs: chairs,

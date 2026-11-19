@@ -34,13 +34,13 @@ For the current pace, not as a gap against a target:
 
 - **Lost production** — chair hours in adjustments and remakes, times gross billings per practice hour.
 - **Staff wages** — those chair hours times assistant hours per chair hour times the dental-assistant wage, plus any hygienist hours you enter times the hygienist wage.
-- **Overhead** — the same chair hours times production per hour times the overhead percent.
+- **Overhead** — shown beside lost production as the share of those billings that is overhead. It is not added to the annual total, because gross billings per hour already include it.
 - **Lab fees** — remakes times the lab fee you enter (starts at $0).
 - **Turnaround** — per case: temp cost, plus extra visits when turnaround is longer than the day threshold (those visits are priced with production, wages, and overhead), plus a carrying cost if you set a rate.
 
 Billings sitting in the queue (units per month × turnaround days / 30 × production per hour × chair hours per remake) are shown and are **not** added unless you set a carrying rate.
 
-Staff wages also sit inside the expense total used for the overhead percent, so the headline counts payroll on these hours twice. The page shows the total with staff left inside overhead as well.
+The annual total is lost production plus staff wages for that time. Overhead stays visible and is not added again. Lab fees, temps, and carrying cost are added only when those fields are set.
 
 A lower block prices only the gap in remake rate, adjustment minutes, and chasing hours:
 

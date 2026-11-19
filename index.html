@@ -36,40 +36,47 @@
   <section id="calculator">
     <div class="wrap">
       <div class="grid4">
-        <div class="loc">
-          <form id="zipForm" action="#result">
-            <label for="zip">State or ZIP</label>
-            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP code" aria-describedby="zipStatus">
-            <button type="submit">Apply ZIP</button>
-          </form>
-          <select id="statePick" aria-label="State">
-            <option value="">Select a state</option>
-          </select>
-          <p class="status" id="zipStatus" role="status"></p>
+        <div>
+          <label for="zip">State or ZIP</label>
+          <div class="combo">
+            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP" aria-describedby="zipStatus">
+            <select id="statePick" aria-label="State"></select>
+          </div>
         </div>
         <div>
           <label for="operatories">Operatories</label>
           <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
-          <p class="hint">Assumption — enter your own</p>
         </div>
         <div>
           <label for="providers">Providers</label>
           <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
-          <p class="hint">Dentists and hygienists. Assumption — enter your own</p>
         </div>
         <div>
           <label for="staffSize">Staff size</label>
           <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
-          <p class="hint">Not providers. Assumption — enter your own</p>
         </div>
       </div>
+      <p class="status" id="zipStatus" role="status">5-digit ZIP, or pick a state.</p>
+      <p class="hint">Assumption — enter your own.</p>
 
       <div class="result" id="result" aria-live="polite">
         <div class="lbl">Estimated loss per year</div>
         <div class="big" id="outAnnual">$0</div>
         <p class="hours" id="outCrowns">0 hours lost</p>
         <div class="rows" id="rows"></div>
-        <p class="gain" id="outProdGap"></p>
+        <div class="gain" id="outProdGap">
+          <p class="lbl">Production lost</p>
+          <div class="gain-cols">
+            <div>
+              <span>Now</span>
+              <b id="nowProd">$0</b>
+            </div>
+            <div>
+              <span>With fewer remakes</span>
+              <b id="scProd">$0</b>
+            </div>
+          </div>
+        </div>
         <p class="quiet" id="outRegion"></p>
         <p class="quiet" id="outVisitNote"></p>
         <p class="quiet" id="outDayLine" hidden></p>
@@ -410,7 +417,7 @@
         </div>
         <div>
           <h3>Overhead — derived, not an ADA-published percent</h3>
-          <p>Table 13: average practice expenses per owner general practitioner, excluding shareholder salaries, $556,450 (367 responses). Table 5: average gross billings per owner general practitioner, $965,660 (423 responses). 556,450 / 965,660 = 57.62% rounded to the cent. Gross billings are not collections, the two averages are from different respondents, and owner pay is excluded. Per practice hour applies that percent to the production-per-hour field. At the ADA hourly average, that is about $358.</p>
+          <p>Table 13: average practice expenses per owner general practitioner, excluding shareholder salaries, $556,450 (367 responses). Table 5: average gross billings per owner general practitioner, $965,660 (423 responses). 556,450 / 965,660 = 57.62% rounded to the cent. Gross billings are not collections, the two averages are from different respondents, and owner pay is excluded. Per practice hour applies that percent to the production-per-hour field. At the ADA hourly average, that is about $358. That share is shown next to lost production and is not added to the annual total, because gross billings per hour already include overhead.</p>
         </div>
         <div>
           <h3>Studies you can apply, not the starting case volume</h3>
@@ -436,7 +443,7 @@
             <li>Hours per day (8). Turnaround days (14). The scenario’s 2%, 5 minutes, and 7 days.</li>
           </ul>
         </div>
-        <p>Staff wages also sit inside the expense total used for overhead, so the headline annual figure counts payroll on these hours twice. The breakdown shows the total with staff left inside overhead as well. Estimates update as you type. They are not a quote.</p>
+        <p>The annual total is lost production plus staff wages for that unproductive time. Overhead is not added again. Lab fees, temps, and carrying cost are added only when those fields are set. Estimates update as you type. They are not a quote.</p>
       </div>
     </div>
   </section>
@@ -450,6 +457,7 @@
   <p class="footnote">
     <span id="fn1"><sup>1</sup> DentalPost, 2024 Dental Hygienist Salary Survey, fielded July–October 2023, 1,802 registered dental hygienists. 19.35% changed employers in the previous 12 months. <a href="https://www.dental-post.com/hubfs/salarysurvey2024/ss2024-dentalhygienist.pdf">Survey PDF</a>.</span>
     <span id="fn2"><sup>2</sup> ADA Health Policy Institute, Economic Outlook and Emerging Issues in Dentistry, December 2023. 923 dentists, December 11–17, 2023. Question: which factors prevented the appointment schedule from reaching 100% last week. <a href="https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/dec2023_hpi_economic_outlook_dentistry_slides.pdf">Slides</a>. A 2017 ranking of the top causes of lost production was not used; this poll is the verified source.</span>
+    <span id="fn3"><sup>3</sup> The annual total is chair time priced at gross billings per practice hour, plus staff wages for that time. ADA gross billings already include overhead, so adding the 57.62% share again would count it twice. The line “of which, overhead that still had to be paid” is that share of the lost production. It is not part of the total. Staff wages are added because the billings figure is production, not the wage paid to assistants and receptionists for those hours.</span>
     <span>Averages used in the calculator: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</span>
   </p>
 </footer>
