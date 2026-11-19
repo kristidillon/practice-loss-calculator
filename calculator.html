@@ -16,29 +16,30 @@
 <meta name="twitter:title" content="What is lab time costing your practice?">
 <meta name="twitter:description" content="See in a minute what lab delays, adjustments, and remakes cost your practice in dollars.">
 <meta name="twitter:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0b3d38">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="calc-page">
 <a class="skip" href="#result">Skip to the estimate</a>
-<header class="stage-head">
+<header class="band-top" id="result">
   <a class="wordmark" href="index.html">Dandy</a>
   <p class="wage-pill"><b id="wagePlace">your state</b> wages · <a id="changeZip" href="index.html">Change</a></p>
-  <p class="staff-line"><b id="staffRate">$0</b> <span id="staffNote">staff cost per hour, wages only, before benefits</span></p>
+  <p class="staff-line"><b id="staffRate">$0</b> <span id="staffNote">staff cost per hour. Wages only, before benefits.</span></p>
+  <p class="lbl">Your estimated annual loss</p>
+  <div class="big" id="outAnnual">$0</div>
+  <p class="pace" id="outPace">That's about 0 chair hours a month, or 0 full days.</p>
+  <div class="substats">
+    <p><b id="outMonth">$0</b> <span>per month</span></p>
+    <p><b id="outCrowns">0</b> <span>hours lost</span></p>
+  </div>
 </header>
 
 <main id="top">
   <section id="calculator">
-    <div class="stage">
-      <div class="card rise" id="result">
-        <div class="lbl">Estimated loss per year</div>
-        <div class="big" id="outAnnual">$0</div>
-        <p class="pace" id="outPace">That's about 0 chair hours a month, or 0 full days.</p>
-        <div class="substats">
-          <p><b id="outMonth">$0</b> <span>per month</span></p>
-          <p><b id="outCrowns">0</b> <span>hours lost</span></p>
-        </div>
+    <div class="stage overlap">
+      <div class="card rise">
+        <h2>Where it goes</h2>
         <div class="rows" id="rows"></div>
         <div class="hbar" id="outProdGap">
           <div class="hbar-row">
@@ -52,6 +53,7 @@
             <b id="scProd">$0</b>
           </div>
         </div>
+        <p class="recover" id="outRecover">Production you could recover: $0/yr</p>
         <div class="actions">
           <button type="button" class="text-btn" id="copyResults">Copy results</button>
           <button type="button" class="text-btn" id="printResults">Print / save as PDF</button>

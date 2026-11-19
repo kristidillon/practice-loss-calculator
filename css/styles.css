@@ -50,9 +50,11 @@ h3 { font-size: 17px; }
 .gate[hidden], #screen2[hidden] { display: none !important; }
 .gate {
   min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 20px; padding: 32px 16px; background: #eef2f4;
+  gap: 20px; padding: 32px 16px;
+  background: linear-gradient(165deg, #0b3d38 0%, #0e1b24 100%);
 }
-.gate .wordmark { font-size: 18px; }
+.gate .wordmark { font-size: 18px; color: #fff; }
+.micro { margin-top: 12px; color: var(--muted); font-size: 13px; text-align: center; }
 .gate-card {
   width: 440px; max-width: 100%; background: #fff; border-radius: 16px;
   box-shadow: 0 10px 30px rgba(17, 17, 17, .06); padding: 32px 28px 28px;
@@ -112,6 +114,8 @@ h3 { font-size: 17px; }
   transition: opacity .2s var(--ease);
 }
 .btn:hover { opacity: .88; }
+.btn.btn-amber { background: #f2b84b; color: #111; }
+.btn.btn-amber:hover { opacity: .92; }
 
 #calculator { padding: 40px 0 16px; scroll-margin-top: 16px; }
 .panel { background: var(--panel); border-radius: 18px; padding: 28px 28px 32px; }
@@ -146,10 +150,10 @@ h3 { font-size: 17px; }
     display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 4;
     justify-content: space-between; align-items: center; gap: 16px;
     min-height: 56px; padding: 8px 20px calc(8px + env(safe-area-inset-bottom));
-    background: #fff; border-top: 1px solid var(--hair);
+    background: #0e1b24; color: #fff; border-top: 0;
   }
-  .sticky-total span { color: var(--muted); font-size: 13px; }
-  .sticky-total b { font-size: 18px; font-variant-numeric: tabular-nums; color: var(--accent); }
+  .sticky-total span { color: rgba(255,255,255,.75); font-size: 13px; }
+  .sticky-total b { font-size: 18px; font-variant-numeric: tabular-nums; color: #fff; }
 }
 .grid4 {
   display: grid;
@@ -289,9 +293,20 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   .btn, .track i, .rise { transition: none; animation: none; }
 }
 
-.calc-page { background: linear-gradient(180deg, #eef2f4 0%, #fff 520px); }
-.stage-head { text-align: center; padding: 32px 20px 4px; }
-.stage-head .wordmark { display: block; font-size: 22px; }
+.calc-page { background: #f4f7f8; }
+.band-top {
+  text-align: center; color: #fff;
+  padding: 28px 20px 88px;
+  background: linear-gradient(165deg, #0b3d38 0%, #0e1b24 100%);
+}
+.band-top .wordmark { display: block; color: #fff; font-size: 18px; }
+.band-top .lbl { margin-top: 28px; color: rgba(255,255,255,.72); }
+.band-top .big { color: #fff; font-size: clamp(64px, 10vw, 92px); }
+.band-top .pace { color: rgba(255,255,255,.9); max-width: 28em; margin-left: auto; margin-right: auto; }
+.band-top .substats p { background: rgba(255,255,255,.14); color: #fff; }
+.band-top .wage-pill { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; }
+.band-top .wage-pill a { color: #f2b84b; }
+.band-top .staff-line { color: rgba(255,255,255,.78); }
 .wage-pill {
   display: flex; width: fit-content; align-items: center; gap: 6px;
   margin: 16px auto 0; padding: 8px 16px; border-radius: 999px; background: #fff;
@@ -299,6 +314,9 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 }
 .wage-pill a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .staff-line { margin-top: 10px; color: var(--muted); font-size: 13px; min-height: 1.4em; }
+.stage.overlap { margin-top: -52px; position: relative; }
+.recover { text-align: center; font-size: 16px; }
+.recover { background: #f2b84b; color: #111; border-radius: 12px; padding: 12px 16px; font-weight: 600; }
 .stage { max-width: 720px; margin: 0 auto; padding: 16px 20px 8px; display: grid; gap: 20px; }
 .calc-page .wrap, .calc-page .wrap.wide { max-width: 720px; }
 .card {
@@ -323,6 +341,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   height: 52px; font-size: 20px; font-weight: 600; border-bottom: 1px solid #e4eaee; background: transparent;
 }
 .calc-page .card label { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.02em; margin-bottom: 8px; }
+.calc-page .card h2 { text-align: center; font-size: 22px; }
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }

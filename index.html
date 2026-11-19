@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="What is lab time costing your practice?">
 <meta name="twitter:description" content="See in a minute what lab delays, adjustments, and remakes cost your practice in dollars.">
 <meta name="twitter:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
-<meta name="theme-color" content="#eef2f4">
+<meta name="theme-color" content="#0b3d38">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -24,13 +24,14 @@
 <main class="gate">
   <a class="wordmark" href="index.html">Dandy</a>
   <div class="gate-card">
-    <h1>What is lab time costing your practice?</h1>
-    <p class="lead">See in a minute what lab delays, adjustments, and remakes cost your practice in dollars.</p>
+    <h1>How many chair hours is your lab costing you?</h1>
+    <p class="lead">Most practices never measure it. Get your number in about a minute.</p>
     <form id="zipForm" action="calculator.html" method="get">
       <label for="zip">Enter your practice ZIP code</label>
       <input id="zip" class="zip-field" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="e.g. 10001" aria-describedby="zipStatus" enterkeyhint="go">
       <p class="status" id="zipStatus" role="status"></p>
-      <button type="submit" class="btn btn-block">Continue</button>
+      <button type="submit" class="btn btn-block btn-amber">Continue</button>
+      <p class="micro">No sign-up. Uses your state’s average wages.</p>
     </form>
   </div>
 </main>

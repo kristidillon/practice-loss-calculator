@@ -351,6 +351,13 @@
         : "About " + money(-diff) + " more per year in this scenario.");
     $("nowProd").textContent = money(est.chairDollars);
     $("scProd").textContent = money(estSc.chairDollars);
+    var recoverGap = Math.round(est.chairDollars) - Math.round(estSc.chairDollars);
+    var recover = $("outRecover");
+    if (recover) {
+      if (recoverGap > 0) recover.textContent = "Production you could recover: " + money(recoverGap) + "/yr";
+      else if (recoverGap < 0) recover.textContent = "This comparison shows " + money(-recoverGap) + "/yr more production lost.";
+      else recover.textContent = "This comparison matches current production.";
+    }
     var barScale = Math.max(est.chairDollars, estSc.chairDollars, 1);
     $("barNow").style.width = (est.chairDollars / barScale * 100) + "%";
     $("barSc").style.width = (estSc.chairDollars / barScale * 100) + "%";
@@ -488,7 +495,8 @@
       $("outPace").textContent,
       rows,
       "Production lost now: " + $("nowProd").textContent,
-      "With fewer remakes: " + $("scProd").textContent
+      "With fewer remakes: " + $("scProd").textContent,
+      $("outRecover") ? $("outRecover").textContent : ""
     ].join("\n");
   }
   function markCopied() { $("copyStatus").textContent = "Copied."; }
