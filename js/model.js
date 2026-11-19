@@ -71,8 +71,11 @@
     var production = Math.max(0, num(input.productionPerHour));
     var daWage = Math.max(0, num(input.daWage));
     var hygWage = Math.max(0, num(input.hygWage));
+    var recWage = Math.max(0, num(input.receptionistWage));
     var remakeHours = Math.max(0, num(input.remakeHours));
     var asstRatio = Math.max(0, num(input.assistantPerChairHour));
+    var hygPerChair = Math.max(0, num(input.hygPerChairHour));
+    var recPerChair = Math.max(0, num(input.receptionistPerChairHour));
     var hygPerRemake = Math.max(0, num(input.hygHoursPerRemake));
     var hygPerSeat = Math.max(0, num(input.hygHoursPerSeat));
     var overheadPct = Math.max(0, num(input.overheadPct)) / 100;
@@ -93,15 +96,16 @@
 
     var lostProduction = coreChairHours * production;
     var assistantHours = coreChairHours * asstRatio;
-    var hygienistHours = remakesYear * hygPerRemake + unitsYear * hygPerSeat;
-    var staffCost = assistantHours * daWage + hygienistHours * hygWage;
+    var hygienistHours = coreChairHours * hygPerChair + remakesYear * hygPerRemake + unitsYear * hygPerSeat;
+    var receptionistHours = coreChairHours * recPerChair;
+    var staffCost = assistantHours * daWage + hygienistHours * hygWage + receptionistHours * recWage;
     var overheadBurn = coreChairHours * overheadPerHour;
     var labCost = remakesYear * labFee;
 
     var visits = turnaroundDays > extraAfter ? extraVisitsAsked : 0;
     var visitHours = extraMin / 60;
     var visitProductionEach = visits * visitHours * production;
-    var visitStaffEach = visits * (visitHours * asstRatio * daWage + hygPerExtra * hygWage);
+    var visitStaffEach = visits * (visitHours * asstRatio * daWage + visitHours * hygPerChair * hygWage + visitHours * recPerChair * recWage + hygPerExtra * hygWage);
     var visitOverheadEach = visits * visitHours * overheadPerHour;
     var carryEach = production * remakeHours * (turnaroundDays / 365) * carryRate;
     var turnaroundEach = tempCost + visitProductionEach + visitStaffEach + visitOverheadEach + carryEach;
@@ -121,6 +125,7 @@
       staffCost: staffCost,
       assistantHours: assistantHours,
       hygienistHours: hygienistHours,
+      receptionistHours: receptionistHours,
       overheadBurn: overheadBurn,
       labCost: labCost,
       visits: visits,
@@ -152,6 +157,43 @@
     };
   }
 
+  function scaledEstimate(input) {
+    var providers = Math.max(0, num(input.providers));
+    var operatories = Math.max(0, num(input.operatories));
+    var staffSize = Math.max(0, num(input.staffSize));
+    var unitsPer = Math.max(0, num(input.unitsPerChair));
+    var chairs = Math.min(providers, operatories);
+    var units = input.unitsTouched ? Math.max(0, num(input.units)) : chairs * unitsPer;
+    var loss = annualLoss(Object.assign({}, input, { units: units }));
+    var visitHours = loss.unitsYear * loss.visits * Math.max(0, num(input.extraVisitMin)) / 60;
+    var hours = loss.coreChairHours + visitHours;
+    var production = Math.max(0, num(input.productionPerHour));
+    var chairDollars = hours * production;
+    var blended = (Math.max(0, num(input.daWage)) + Math.max(0, num(input.receptionistWage))) / 2;
+    var ratioSum = Math.max(0, num(input.assistantPerChairHour)) + Math.max(0, num(input.hygPerChairHour)) + Math.max(0, num(input.receptionistPerChairHour));
+    var staffFactor = ratioSum / 3;
+    var staffHours = operatories > 0 ? hours * (staffSize / operatories) * staffFactor : 0;
+    var staffDollars = staffHours * blended;
+    var overheadDollars = chairDollars * Math.max(0, num(input.overheadPct)) / 100;
+    var otherDollars = loss.labCost + loss.tempCost + loss.carryCost;
+    // Billings per hour already include overhead, so the share is reported and not added.
+    var total = chairDollars + staffDollars + otherDollars;
+    return {
+      units: units,
+      chairs: chairs,
+      hours: hours,
+      chairDollars: chairDollars,
+      staffHours: staffHours,
+      staffDollars: staffDollars,
+      blended: blended,
+      overheadDollars: overheadDollars,
+      otherDollars: otherDollars,
+      total: total,
+      monthly: total / 12,
+      loss: loss
+    };
+  }
+
   function scenarioInput(input) {
     return Object.assign({}, input, {
       remakePct: input.scenarioRemake,
@@ -164,6 +206,7 @@
     originalComparison: originalComparison,
     annualLoss: annualLoss,
     equivalents: equivalents,
+    scaledEstimate: scaledEstimate,
     scenarioInput: scenarioInput
   };
 });

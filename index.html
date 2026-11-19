@@ -4,69 +4,200 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dental Practice Production/Revenue Loss Calculator</title>
-<meta name="description" content="Dental Practice Production/Revenue Loss Calculator. Estimate what adjustments, remakes, staff time, overhead, and lab turnaround cost a practice. Enter a U.S. ZIP for state wages.">
-<meta property="og:title" content="Dental Practice Production/Revenue Loss Calculator">
-<meta property="og:description" content="Estimate lost production, staff cost, overhead, and lab turnaround from the numbers you enter.">
+<meta name="description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
+<meta property="og:title" content="What is lost chair time costing your practice?">
+<meta property="og:description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dental Practice Production/Revenue Loss Calculator">
-<meta name="twitter:description" content="Estimate lost production, staff cost, overhead, and lab turnaround from the numbers you enter.">
+<meta property="og:url" content="https://kristidillon.github.io/practice-loss-calculator/">
+<meta property="og:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="What is lost chair time costing your practice?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What is lost chair time costing your practice?">
+<meta name="twitter:description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
+<meta name="twitter:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <a class="skip" href="#result">Skip to the estimate</a>
 <header class="nav">
-  <div class="wrap">
-    <a class="brand" href="#top">Dental Practice Production/Revenue Loss Calculator</a>
-    <nav class="nav-links" aria-label="Page">
-      <a href="#breakdown">Breakdown</a>
-      <a href="#area">Your area</a>
-      <a href="#sources">Sources</a>
-      <a class="btn btn-dark btn-sm" id="navMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Get your full report</a>
-    </nav>
+  <div class="wrap wide">
+    <a class="brand wordmark" href="#top">Dandy</a>
   </div>
 </header>
 
 <main id="top">
   <section class="hero">
-    <div class="wrap opening">
-      <div>
-        <p class="eyebrow">A practice estimate</p>
-        <h1>Dental Practice Production/Revenue Loss Calculator</h1>
-        <p class="lede">Enter a ZIP code. State wages fill in from published figures. You set the case volume. The annual number is an estimate — chair time, staff, overhead, and the wait on the lab.</p>
+    <div class="wrap wide intro">
+      <p class="kicker">Dental Practice Production/Revenue Loss Calculator</p>
+      <h1>What is lost chair time costing your practice?</h1>
+      <p class="subhead">Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.</p>
+      <a class="btn btn-accent btn-lg" href="#calculator">See my number</a>
+    </div>
+  </section>
 
-        <form id="zipForm" action="#result">
-          <label class="step-label" for="zip">Step 1 · U.S. ZIP code</label>
-          <div class="zip-row">
-            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="10001" aria-describedby="zipStatus">
-            <button class="btn btn-accent" type="submit">See the estimate</button>
+  <section class="facts" aria-label="Survey findings">
+    <div class="wrap wide">
+      <ul class="tiles">
+        <li>
+          <b>19%</b>
+          <span>of hygienists switched jobs last year<sup><a href="#fn1">1</a></sup></span>
+        </li>
+        <li>
+          <b>82%</b>
+          <span>of dentists lost time to no-shows and late cancels<sup><a href="#fn2">2</a></sup></span>
+        </li>
+        <li>
+          <b>27%</b>
+          <span>couldn’t fill open staff roles<sup><a href="#fn2">2</a></sup></span>
+        </li>
+      </ul>
+      <p class="stand">Your lab and workflow shouldn’t contribute to these causes.</p>
+    </div>
+  </section>
+
+  <section id="calculator">
+    <div class="wrap wide">
+      <div class="panel">
+        <div class="calc">
+          <div class="inputs">
+            <div>
+              <label for="zip">State or ZIP</label>
+              <div class="combo">
+                <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP" aria-describedby="zipStatus">
+                <select id="statePick" aria-label="State"></select>
+              </div>
+            </div>
+            <div>
+              <label for="operatories">Operatories</label>
+              <div class="stepper">
+                <button type="button" class="step" data-step="operatories" data-dir="-1" aria-label="Fewer operatories">−</button>
+                <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
+                <button type="button" class="step" data-step="operatories" data-dir="1" aria-label="More operatories">+</button>
+              </div>
+            </div>
+            <div>
+              <label for="providers">Providers</label>
+              <div class="stepper">
+                <button type="button" class="step" data-step="providers" data-dir="-1" aria-label="Fewer providers">−</button>
+                <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
+                <button type="button" class="step" data-step="providers" data-dir="1" aria-label="More providers">+</button>
+              </div>
+            </div>
+            <div>
+              <label for="staffSize">Staff size</label>
+              <div class="stepper">
+                <button type="button" class="step" data-step="staffSize" data-dir="-1" aria-label="Fewer staff">−</button>
+                <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
+                <button type="button" class="step" data-step="staffSize" data-dir="1" aria-label="More staff">+</button>
+              </div>
+            </div>
+            <p class="status" id="zipStatus" role="status"></p>
+            <p class="hint">Assumption — enter your own.</p>
           </div>
-        </form>
-        <div class="state-pick">
-          <label for="statePick">Or choose a state</label>
-          <select id="statePick">
-            <option value="">Select a state</option>
-          </select>
-        </div>
-        <p class="status" id="zipStatus" role="status"></p>
 
-        <p class="step-label">Step 2 · Three numbers from your practice</p>
+          <div class="result" id="result">
+            <div class="lbl">Estimated loss per year</div>
+            <div class="big" id="outAnnual">$0</div>
+            <div class="substats">
+              <p><b id="outMonth">$0</b> <span>per month</span></p>
+              <p><b id="outCrowns">0</b> <span>hours lost</span></p>
+            </div>
+            <div class="rows" id="rows"></div>
+            <div class="hbar" id="outProdGap">
+              <div class="hbar-row">
+                <span>Now</span>
+                <div class="track"><i id="barNow"></i></div>
+                <b id="nowProd">$0</b>
+              </div>
+              <div class="hbar-row">
+                <span>With fewer remakes</span>
+                <div class="track"><i id="barSc"></i></div>
+                <b id="scProd">$0</b>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="text-btn" id="copyResults">Copy results</button>
+              <button type="button" class="text-btn" id="printResults">Print / save as PDF</button>
+            </div>
+            <p class="status" id="copyStatus" role="status"></p>
+            <p class="sr" id="liveTotal" aria-live="polite"></p>
+            <p class="quiet" id="outDayLine" hidden></p>
+            <p class="quiet" id="outMonthLine" hidden></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="breakdown" hidden>
+    <div id="bars"></div>
+    <p id="overlapNote"></p>
+    <p id="buildFormula"></p>
+    <p id="outDiff"></p>
+    <p id="nowTotal"></p>
+    <p id="scTotal"></p>
+    <p id="nowQueue"></p>
+    <p id="scQueue"></p>
+  </section>
+
+  <section id="area">
+    <div class="wrap">
+      <details class="finetune">
+        <summary>Fine-tune</summary>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="scenarioRemake">Remake rate in the comparison (%)</label>
+              <div class="sub">The “With fewer remakes” bar uses this. Starts at 2%. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="scenarioRemake" data-field="scenarioRemake" type="number" min="0" max="50" step="0.1" value="2" inputmode="decimal"><span class="unit">%</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="scenarioAdjust">Adjustment time in the comparison (min)</label>
+              <div class="sub">Starts at 5 minutes. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="scenarioAdjust" data-field="scenarioAdjust" type="number" min="0" max="60" step="1" value="5" inputmode="numeric"><span class="unit">min</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="scenarioTurnaround">Turnaround in the comparison (days)</label>
+              <div class="sub">Starts at 7 days. Changes the bar when extra visits, temps, or a carrying rate are set. <span class="chip assume">Assumption — enter your own</span></div>
+            </div>
+            <div class="val"><input id="scenarioTurnaround" data-field="scenarioTurnaround" type="number" min="0" max="90" step="1" value="7" inputmode="numeric"><span class="unit">days</span></div>
+          </div>
+        </div>
         <div class="field">
           <div class="field-top">
             <div>
               <label for="units">Crown and bridge units per month</label>
-              <div class="sub">Single units, bridges, implant crowns</div>
+              <div class="sub">Starts from operatories and providers. Edit to override. <span class="chip assume">Assumption — enter your own</span></div>
             </div>
-            <div class="val"><input id="units" data-field="units" type="number" min="1" max="200" value="25" inputmode="numeric"><span class="unit">/ mo</span></div>
+            <div class="val"><input id="units" data-field="units" type="number" min="0" max="400" value="50" inputmode="numeric"><span class="unit">/ mo</span></div>
           </div>
-          <input data-field="units" type="range" min="1" max="120" value="25" aria-label="Crown and bridge units per month">
+        </div>
+        <div class="field">
+          <div class="field-top">
+            <div>
+              <label for="unitsPerChair">Units per provider or operatory</label>
+              <div class="sub">Used when the monthly units field has not been edited</div>
+            </div>
+            <div class="val"><input id="unitsPerChair" data-field="unitsPerChair" type="number" min="0" max="80" step="1" value="25" inputmode="numeric"></div>
+          </div>
         </div>
         <div class="field">
           <div class="field-top">
             <div>
               <label for="remakePct">Cases that come back as remakes</label>
-              <div class="sub">Starts at 8%, the one-case calculator’s starting value</div>
+              <div class="sub">Starts at 8%. <span class="chip assume">Assumption — enter your own</span></div>
             </div>
             <div class="val"><input id="remakePct" data-field="remakePct" type="number" min="0" max="50" step="0.1" value="8" inputmode="decimal"><span class="unit">%</span></div>
           </div>
@@ -79,100 +210,12 @@
           <div class="field-top">
             <div>
               <label for="adjustMin">Time adjusting at the seat</label>
-              <div class="sub">Assumption — enter your own. Minutes per crown, chairside</div>
+              <div class="sub"><span class="chip assume">Assumption — enter your own</span> Minutes per crown, chairside</div>
             </div>
             <div class="val"><input id="adjustMin" data-field="adjustMin" type="number" min="0" max="60" step="1" value="15" inputmode="numeric"><span class="unit">min</span></div>
           </div>
           <input data-field="adjustMin" type="range" min="0" max="45" value="15" aria-label="Adjustment minutes per seat">
         </div>
-      </div>
-
-      <div class="result" id="result" aria-live="polite">
-        <div class="lbl">Step 3 · Estimated loss per year</div>
-        <div class="big" id="outAnnual">$0</div>
-        <p class="explain" id="outDayLine">About $0 a month, and about $0 an office day.</p>
-        <p class="explain" id="outCrowns">About 0 crowns of chair time.</p>
-        <p class="region-line" id="outRegion">U.S. wage averages. Production starts at $500 until you enter a ZIP.</p>
-        <p class="explain" id="outVisitNote"></p>
-        <div class="monthly">
-          <div class="dot" aria-hidden="true"></div>
-          <p id="outMonthLine">Every month at this pace, the estimate is about <b>$0</b>.</p>
-        </div>
-        <div class="cta-row">
-          <a class="btn btn-accent btn-lg" href="#report">Get your full report</a>
-          <a class="calc-mail" id="resultMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Email this estimate</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="breakdown">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">The breakdown</p>
-        <h2>Where the estimate goes.</h2>
-        <p class="lede">Lost production, staff wages, overhead, lab fees, and turnaround. Each row is part of the annual figure above.</p>
-      </div>
-      <div class="card rv">
-        <div class="bars" id="bars"></div>
-        <div class="legend" aria-hidden="true">
-          <span><b style="background:#0A7C86"></b>Lost production</span>
-          <span><b style="background:#1D1D1F"></b>Staff wages</span>
-          <span><b style="background:#6E6E73"></b>Overhead</span>
-          <span><b style="background:#C7C7CC"></b>Lab fees</span>
-          <span><b style="background:#3A3A3F"></b>Turnaround</span>
-        </div>
-        <div class="rows" id="rows"></div>
-        <p class="note" id="overlapNote"></p>
-        <p class="note" id="buildFormula"></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="band" id="scenario">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">A comparison you set</p>
-        <h2>With fewer adjustments and remakes.</h2>
-        <p class="lede">Change the remake rate, adjustment time, and turnaround. Everything else stays put. This is a scenario, not a forecast.</p>
-      </div>
-      <div class="card rv">
-        <div class="pair">
-          <div>
-            <label for="scenarioRemake">Remake rate in the scenario (%)</label>
-            <input id="scenarioRemake" data-field="scenarioRemake" type="number" min="0" max="50" step="0.1" value="2" inputmode="decimal">
-            <p class="hint">Starts at 2%, the one-case calculator’s comparison setting. Assumption — enter your own.</p>
-          </div>
-          <div>
-            <label for="scenarioAdjust">Adjustment time in the scenario (min)</label>
-            <input id="scenarioAdjust" data-field="scenarioAdjust" type="number" min="0" max="60" step="1" value="5" inputmode="numeric">
-            <p class="hint">Starts at 5 minutes, the one-case calculator’s comparison setting. Assumption — enter your own.</p>
-          </div>
-        </div>
-        <div style="margin-top:12px">
-          <label for="scenarioTurnaround">Turnaround in the scenario (days)</label>
-          <input id="scenarioTurnaround" data-field="scenarioTurnaround" type="number" min="0" max="90" step="1" value="7" inputmode="numeric">
-          <p class="hint">Assumption — enter your own. Days change the dollar total when extra visits, temps, or a carrying rate are set. They always change the billings sitting in the queue.</p>
-        </div>
-        <div class="compare">
-          <article>
-            <div class="k">Now</div>
-            <strong id="nowTotal">$0</strong>
-            <p id="nowQueue">Billings in the queue: $0. Not added to the loss.</p>
-          </article>
-          <article>
-            <div class="k">This scenario</div>
-            <strong id="scTotal">$0</strong>
-            <p id="scQueue">Billings in the queue: $0. Not added to the loss.</p>
-          </article>
-        </div>
-        <p class="diff" id="outDiff"></p>
-      </div>
-    </div>
-  </section>
-
-  <section id="area">
-    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow" id="areaEyebrow">Your area</p>
         <h2 id="areaTitle">U.S. averages, ready to edit.</h2>
@@ -214,16 +257,22 @@
 
         <div class="stack">
           <h3>Wages</h3>
-          <span class="chip source">BLS OEWS, May 2025</span>
-          <div>
-            <label for="daWage">Dental assistant, mean hourly wage</label>
-            <div class="money-input"><span>$</span><input id="daWage" data-field="daWage" type="number" min="0" step="0.01" value="24.13" inputmode="decimal"></div>
-            <p class="hint" id="daMeta">SOC 31-9091. Straight-time wage, not loaded. Benefits are not included.</p>
-          </div>
+          <span class="chip source">BLS OEWS, May 2024</span>
+          <p class="hint" id="teamLine"></p>
           <div>
             <label for="hygWage">Dental hygienist, mean hourly wage</label>
-            <div class="money-input"><span>$</span><input id="hygWage" data-field="hygWage" type="number" min="0" step="0.01" value="47.59" inputmode="decimal"></div>
-            <p class="hint" id="hygMeta">SOC 29-1292. The wage is in the formula. Hours below start at 0 because no public figure says how long a hygienist spends on a remake.</p>
+            <div class="money-input"><span>$</span><input id="hygWage" data-field="hygWage" type="number" min="0" step="0.01" value="45.14" inputmode="decimal"></div>
+            <p class="hint" id="hygMeta">SOC 29-1292. Official cross-industry mean. Not a loaded wage.</p>
+          </div>
+          <div>
+            <label for="daWage">Dental assistant, mean hourly wage</label>
+            <div class="money-input"><span>$</span><input id="daWage" data-field="daWage" type="number" min="0" step="0.01" value="23.49" inputmode="decimal"></div>
+            <p class="hint" id="daMeta">SOC 31-9091. Official cross-industry mean. Not a loaded wage.</p>
+          </div>
+          <div>
+            <label for="receptionistWage">Receptionist, mean hourly wage</label>
+            <div class="money-input"><span>$</span><input id="receptionistWage" data-field="receptionistWage" type="number" min="0" step="0.01" value="21.39" inputmode="decimal"></div>
+            <p class="hint" id="recMeta">SOC 43-4171, Offices of Dentists (NAICS 621200). Not a loaded wage.</p>
           </div>
           <div class="pair">
             <div>
@@ -263,8 +312,19 @@
           <div>
             <label for="assistantPerChairHour">Assistant hours per chair hour</label>
             <input id="assistantPerChairHour" data-field="assistantPerChairHour" type="number" min="0" max="4" step="0.1" value="1" inputmode="decimal">
-            <p class="hint">Assumption — enter your own. Starts at 1, meaning an assistant is present for the chair time counted here.</p>
+            <p class="hint">Assumption — enter your own. Starts at 1.</p>
           </div>
+          <div class="pair">
+            <div>
+              <label for="hygPerChairHour">Hygienist hours per chair hour</label>
+              <input id="hygPerChairHour" data-field="hygPerChairHour" type="number" min="0" max="4" step="0.1" value="1" inputmode="decimal">
+            </div>
+            <div>
+              <label for="receptionistPerChairHour">Receptionist hours per chair hour</label>
+              <input id="receptionistPerChairHour" data-field="receptionistPerChairHour" type="number" min="0" max="4" step="0.1" value="1" inputmode="decimal">
+            </div>
+          </div>
+          <p class="hint">These three start at 1, so staff cost begins at Team/hr: one hygienist, one assistant, and one receptionist for each chair hour counted. Assumption — enter your own.</p>
           <div class="pair">
             <div>
               <label for="hygHoursPerRemake">Hygienist hours per remake</label>
@@ -275,7 +335,7 @@
               <input id="hygHoursPerSeat" data-field="hygHoursPerSeat" type="number" min="0" max="8" step="0.1" value="0" inputmode="decimal">
             </div>
           </div>
-          <p class="hint">Both start at 0. Assumption — enter your own.</p>
+          <p class="hint">Both start at 0. They add hours on top of hygienist hours per chair hour. Assumption — enter your own.</p>
         </div>
 
         <div class="stack">
@@ -339,6 +399,7 @@
           <p class="hint"><button type="button" class="text-btn" id="useCrowns18">Use 18 crowns a month, the self-reported study average</button></p>
         </div>
       </div>
+      </details>
     </div>
   </section>
 
@@ -374,44 +435,14 @@
             <input id="targetStaffHrs" data-field="targetStaffHrs" type="number" min="0" max="10" step="0.25" value="0.5">
           </div>
           <div>
-            <label>Chair hours per remake</label>
+            <label for="remakeHoursEcho">Chair hours per remake</label>
             <input id="remakeHoursEcho" type="text" readonly value="1.5" aria-readonly="true">
             <p class="hint">Edited under Your area.</p>
           </div>
         </div>
         <p class="hint" id="deltaFormula" style="margin-top:14px"></p>
         <p class="hint">These targets start where the one-case calculator starts. They are editable assumptions, not a predicted result. This comparison does not price turnover.</p>
-        <div class="cta-row">
-          <a class="btn btn-accent" id="deltaCta" href="https://calendly.com/kristi-dillon-meetdandy?utm_source=practice-loss-calculator&amp;utm_medium=landing&amp;utm_campaign=practice-loss&amp;utm_content=calc" target="_blank" rel="noopener"><span id="deltaCtaText">Book a 30-min demo</span></a>
-          <a class="calc-mail" id="deltaMail" href="mailto:kristi.dillon@meetdandy.com?subject=Dental%20Practice%20Production%2FRevenue%20Loss%20Calculator">Email this estimate</a>
-        </div>
       </div>
-    </div>
-  </section>
-
-  <section id="report">
-    <div class="wrap report-grid">
-      <div>
-        <p class="eyebrow">Next step</p>
-        <h2>Get your full report.</h2>
-        <p class="lede" style="margin-top:14px">The form opens an email draft with this estimate. Nothing is sent to a server.</p>
-      </div>
-      <form class="report card" id="reportForm" action="#" method="post">
-        <div>
-          <label for="reportName">Name</label>
-          <input id="reportName" name="name" autocomplete="name" required>
-        </div>
-        <div>
-          <label for="reportEmail">Email</label>
-          <input id="reportEmail" name="email" type="email" autocomplete="email" required>
-        </div>
-        <div>
-          <label for="reportPractice">Practice</label>
-          <input id="reportPractice" name="practice" autocomplete="organization" required>
-        </div>
-        <button class="btn btn-accent btn-lg" type="submit">Get your full report</button>
-        <p class="status" id="reportStatus" role="status"></p>
-      </form>
     </div>
   </section>
 
@@ -423,8 +454,8 @@
       </div>
       <div class="sources">
         <div>
-          <h3>Wages — BLS OEWS, May 2025</h3>
-          <p>Dental assistants are SOC 31-9091. Dental hygienists are SOC 29-1292. OEWS does not publish dental assistants as 29-9093. State and U.S. mean and median hourly wages, all industries, were read from the BLS Public Data API on November 18, 2026 (state series OEUS, national series OEUN, datatype 03 for the mean and 08 for the median). They are straight-time wages, not loaded wages. Kansas has no published May 2025 state series for either occupation in that API, so the U.S. mean is filled in and labeled. <a href="https://www.bls.gov/oes/tables.htm">BLS OEWS tables</a>.</p>
+          <h3>Wages — BLS OEWS, May 2024</h3>
+          <p>Dental hygienists (SOC 29-1292) and dental assistants (SOC 31-9091) are official published mean hourly wages, cross-industry, for all 50 states and the District of Columbia. Receptionists (SOC 43-4171) are mean hourly wages for Offices of Dentists (NAICS 621200). State receptionist figures are May 2024 OEWS research estimates: BLS publishes them for research, they do not get every quality check of the standard release, and model error may be higher. The national receptionist figure is the official national industry mean, $21.39. Team/hr is one of each role. Wages only; benefits and payroll taxes are not included. Minnesota, Montana, and Vermont have no published dental-office receptionist wage, so Team/hr is n/a there and the estimate uses the U.S. receptionist mean, labeled as such. <a href="https://www.bls.gov/oes/tables.htm">BLS OEWS tables</a>. <a href="https://www.bls.gov/oes/oes_research_2024.htm">May 2024 research estimates</a>.</p>
         </div>
         <div>
           <h3>Production and hours — ADA Health Policy Institute, 2025</h3>
@@ -432,7 +463,7 @@
         </div>
         <div>
           <h3>Overhead — derived, not an ADA-published percent</h3>
-          <p>Table 13: average practice expenses per owner general practitioner, excluding shareholder salaries, $556,450 (367 responses). Table 5: average gross billings per owner general practitioner, $965,660 (423 responses). 556,450 / 965,660 = 57.62% rounded to the cent. Gross billings are not collections, the two averages are from different respondents, and owner pay is excluded. Per practice hour applies that percent to the production-per-hour field. At the ADA hourly average, that is about $358.</p>
+          <p>Table 13: average practice expenses per owner general practitioner, excluding shareholder salaries, $556,450 (367 responses). Table 5: average gross billings per owner general practitioner, $965,660 (423 responses). 556,450 / 965,660 = 57.62% rounded to the cent. Gross billings are not collections, the two averages are from different respondents, and owner pay is excluded. Per practice hour applies that percent to the production-per-hour field. At the ADA hourly average, that is about $358. That share is shown next to lost production and is not added to the annual total, because gross billings per hour already include overhead.</p>
         </div>
         <div>
           <h3>Studies you can apply, not the starting case volume</h3>
@@ -441,24 +472,24 @@
         </div>
         <div>
           <h3>ZIP codes</h3>
-          <p>GeoNames postal codes, CC BY 4.0, U.S. file. <a href="https://www.geonames.org/">geonames.org</a>. A ZIP maps to a state, then to that state’s OEWS wages. It is not a ZIP-level wage. Military mail entries in that file have no state, so the page uses U.S. means. Puerto Rico is in the BLS wage file and in the state list; it is not in the GeoNames U.S. extract used here.</p>
+          <p>GeoNames postal codes, CC BY 4.0, U.S. file. <a href="https://www.geonames.org/">geonames.org</a>. A ZIP maps to a state, then to that state’s OEWS wages. It is not a ZIP-level wage. Military mail entries in that file have no state, so the page uses U.S. means. Puerto Rico is not in this wage file. Two Hawaii ZIP codes that also appear as military mail, 96860 and 96863, map to Hawaii.</p>
         </div>
         <div>
-          <h3>The one-case calculator</h3>
-          <p>The comparison formula and the slider ranges are ported from <a href="https://kristidillon.github.io/one-case/#cost">the one-case page</a>. Its line about a 5–10% industry average is not repeated here; this page did not find a public source for that range.</p>
+          <h3>Comparison formula</h3>
+          <p>The lower comparison prices the gap in remake rate, adjustment minutes, and chasing hours. It does not include overhead, lab fees, or turnaround. A 5–10% industry-average remake line is not used here; this page did not find a public source for that range.</p>
         </div>
         <div>
           <h3>Marked “assumption — enter your own”</h3>
           <ul>
             <li>Adjustment minutes, prep minutes, seat minutes, and chair hours per remake.</li>
-            <li>Assistant hours per chair hour, and hygienist hours (those start at 0).</li>
+            <li>Assistant, hygienist, and receptionist hours per chair hour start at 1, which is Team/hr. Extra hygienist hours per remake and per seat start at 0.</li>
             <li>Lab fee per remake and temp cost (both start at $0).</li>
             <li>Extra visits (starts at 1), the day threshold (7), and minutes per extra visit (20).</li>
             <li>Carrying rate (starts at 0, so the queue of billings is shown and not added).</li>
             <li>Hours per day (8). Turnaround days (14). The scenario’s 2%, 5 minutes, and 7 days.</li>
           </ul>
         </div>
-        <p>Staff wages also sit inside the expense total used for overhead, so the headline annual figure counts payroll on these hours twice. The breakdown shows the total with staff left inside overhead as well. Estimates update as you type. They are not a quote.</p>
+        <p>The annual total is lost production plus staff wages for that unproductive time. Overhead is not added again. Lab fees, temps, and carrying cost are added only when those fields are set. Estimates update as you type. They are not a quote.</p>
       </div>
     </div>
   </section>
@@ -469,14 +500,20 @@
     <div>Dental Practice Production/Revenue Loss Calculator</div>
     <div>Estimates use the sources above and the numbers you enter.</div>
   </div>
+  <p class="footnote">
+    <span id="fn1"><sup>1</sup> DentalPost, 2024 Dental Hygienist Salary Survey, fielded July–October 2023, 1,802 registered dental hygienists. 19.35% changed employers in the previous 12 months. <a href="https://www.dental-post.com/hubfs/salarysurvey2024/ss2024-dentalhygienist.pdf">Survey PDF</a>.</span>
+    <span id="fn2"><sup>2</sup> ADA Health Policy Institute, Economic Outlook and Emerging Issues in Dentistry, December 2023. 923 dentists, December 11–17, 2023. Question: which factors prevented the appointment schedule from reaching 100% last week. The reasons were no-shows or cancellations with less than 24 hours’ notice (82%), cancellations with more than 24 hours’ notice (51%), not enough patients making appointments (37%), and trouble filling vacant staff positions (27%). <a href="https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/dec2023_hpi_economic_outlook_dentistry_slides.pdf">Slides</a>. A 2017 ranking of the top causes of lost production was not used; this poll is the verified source.</span>
+    <span id="fn3"><sup>3</sup> The annual total is chair time priced at gross billings per practice hour, plus staff wages for that time. ADA gross billings already include overhead, so the 57.62% share is not added on top. Staff wages are added because the billings figure is production, not the wage paid to assistants and receptionists for those hours.</span>
+    <span>Wages follow the state for the ZIP, from BLS OEWS May 2024. Production per hour and the overhead share are U.S. figures; ADA does not publish them by state. Minnesota, Montana, and Vermont have no published dental-office receptionist wage, so the U.S. mean of $21.39 is used there. Military mail uses the U.S. means. The estimate includes 1 assumed extra visit per case when lab turnaround is longer than 7 days. That visit count is an assumption.</span>
+    <span>Averages used in the calculator: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</span>
+  </p>
 </footer>
 
-<div class="sticky" id="sticky">
-  <div><small>Estimated loss / year</small><b id="stickyValue">$0</b></div>
-  <a class="btn btn-accent btn-sm" href="#report">Get your full report</a>
-</div>
-
 <noscript><p class="wrap">This estimate needs JavaScript. The page is still a single file you can open locally once JavaScript is available.</p></noscript>
+<div class="sticky-total" id="stickyTotal">
+  <span>Estimated loss per year</span>
+  <b id="stickyAnnual">$0</b>
+</div>
 <script src="js/data.js"></script>
 <script src="js/zips.js"></script>
 <script src="js/model.js"></script>
