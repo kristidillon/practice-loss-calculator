@@ -216,17 +216,28 @@
     parent.appendChild(row);
   }
 
+  function paintMoney(value) {
+    var text = money(value);
+    $("outAnnual").textContent = text;
+    $("outMonth").textContent = money(value / 12);
+    $("stickyAnnual").textContent = text;
+  }
   function animateAnnual(target) {
     var el = $("outAnnual");
-    if (reduced) { el.textContent = money(target); shownAnnual = target; return; }
+    var finish = function (value) {
+      paintMoney(value);
+      shownAnnual = value;
+      $("liveTotal").textContent = "Estimated loss per year " + money(value) + ". " + $("outCrowns").textContent + " hours lost.";
+    };
+    if (reduced) { finish(target); return; }
     var start = shownAnnual, t0 = performance.now(), dur = 520;
     cancelAnimationFrame(el._raf);
     var tick = function (t) {
       var p = Math.min(1, (t - t0) / dur);
       var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = money(start + (target - start) * eased);
+      paintMoney(start + (target - start) * eased);
       if (p < 1) el._raf = requestAnimationFrame(tick);
-      else shownAnnual = target;
+      else finish(target);
     };
     el._raf = requestAnimationFrame(tick);
   }
@@ -245,8 +256,8 @@
     var original = Model.originalComparison(state);
     var rec = wageRecord();
 
+    $("outCrowns").textContent = fmt(est.hours, 1);
     animateAnnual(Math.round(est.chairDollars) + Math.round(est.staffDollars) + Math.round(est.otherDollars));
-    $("outCrowns").textContent = fmt(est.hours, 1) + " hours lost";
     $("outRegion").textContent = regionSentence();
 
     if (now.visits > 0) {
@@ -351,6 +362,9 @@
         : "About " + money(-diff) + " more per year in this scenario.");
     $("nowProd").textContent = money(est.chairDollars);
     $("scProd").textContent = money(estSc.chairDollars);
+    var barScale = Math.max(est.chairDollars, estSc.chairDollars, 1);
+    $("barNow").style.width = (est.chairDollars / barScale * 100) + "%";
+    $("barSc").style.width = (estSc.chairDollars / barScale * 100) + "%";
 
     $("deltaDollars").textContent = money(original.dollars);
     $("deltaHours").textContent = fmt(original.chairHours, 0);
@@ -485,6 +499,63 @@
     sync("remakeHours");
     paint();
   });
+
+  document.body.addEventListener("click", function (event) {
+    var btn = event.target.closest && event.target.closest(".step");
+    if (!btn) return;
+    var name = btn.getAttribute("data-step");
+    var input = $(name);
+    if (!input) return;
+    var next = num(state[name]) + num(btn.getAttribute("data-dir"));
+    if (input.min !== "" && next < num(input.min)) next = num(input.min);
+    if (input.max !== "" && next > num(input.max)) next = num(input.max);
+    state[name] = next;
+    state.touched[name] = true;
+    sync(name);
+    paint();
+  });
+
+  function resultsPlain() {
+    var rows = Array.prototype.map.call(document.querySelectorAll("#rows .break-row"), function (row) {
+      return row.innerText.replace(/\s+/g, " ").trim();
+    }).join("\n");
+    return [
+      "Dental Practice Production/Revenue Loss Calculator",
+      "Estimated loss per year: " + $("outAnnual").textContent,
+      "Per month: " + $("outMonth").textContent,
+      "Hours lost: " + $("outCrowns").textContent,
+      rows,
+      "Production lost now: " + $("nowProd").textContent,
+      "With fewer remakes: " + $("scProd").textContent,
+      $("outRegion").textContent
+    ].join("\n");
+  }
+  function markCopied() { $("copyStatus").textContent = "Copied."; }
+  $("copyResults").addEventListener("click", function () {
+    var text = resultsPlain();
+    var fallback = function () {
+      var area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("aria-hidden", "true");
+      document.body.appendChild(area);
+      area.select();
+      try { document.execCommand("copy"); markCopied(); }
+      catch (err) { $("copyStatus").textContent = "Copy is unavailable in this browser."; }
+      area.remove();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(markCopied, fallback);
+    else fallback();
+  });
+  $("printResults").addEventListener("click", function () { window.print(); });
+
+  if ("IntersectionObserver" in window) {
+    var stickyWatch = new IntersectionObserver(function (entries) {
+      var entry = entries[0];
+      var past = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      $("stickyTotal").classList.toggle("is-on", past);
+    });
+    stickyWatch.observe($("result"));
+  }
 
   fillStates();
   applyWages();

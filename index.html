@@ -4,83 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dental Practice Production/Revenue Loss Calculator</title>
-<meta name="description" content="Dental Practice Production/Revenue Loss Calculator. Estimate what adjustments, remakes, staff time, overhead, and lab turnaround cost a practice. Enter a U.S. ZIP for state wages.">
-<meta property="og:title" content="Dental Practice Production/Revenue Loss Calculator">
-<meta property="og:description" content="Estimate lost production, staff cost, overhead, and lab turnaround from the numbers you enter.">
+<meta name="description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
+<meta property="og:title" content="What is lost chair time costing your practice?">
+<meta property="og:description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dental Practice Production/Revenue Loss Calculator">
-<meta name="twitter:description" content="Estimate lost production, staff cost, overhead, and lab turnaround from the numbers you enter.">
+<meta property="og:url" content="https://kristidillon.github.io/practice-loss-calculator/">
+<meta property="og:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="What is lost chair time costing your practice?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What is lost chair time costing your practice?">
+<meta name="twitter:description" content="Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.">
+<meta name="twitter:image" content="https://kristidillon.github.io/practice-loss-calculator/og.png">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <a class="skip" href="#result">Skip to the estimate</a>
 <header class="nav">
-  <div class="wrap">
+  <div class="wrap wide">
     <a class="brand wordmark" href="#top">Dandy</a>
   </div>
 </header>
 
 <main id="top">
   <section class="hero">
-    <div class="wrap intro">
-      <h1>Dental Practice Production/Revenue Loss Calculator</h1>
-      <p class="subhead">An estimate from national and state averages. Edit any assumption.</p>
-      <p>In DentalPost’s survey of 1,802 registered dental hygienists, fielded from July through October 2023, <strong>19.35%</strong> said they had changed employers in the previous 12 months.<sup><a href="#fn1">1</a></sup> Schedules also lose production for reasons dentists name directly. In the ADA Health Policy Institute poll of 923 dentists, collected December 11–17, 2023, the reasons a schedule was not full the previous week were most often no-shows or cancellations with less than 24 hours’ notice (<strong>82%</strong>), cancellations with more than 24 hours’ notice (<strong>51%</strong>), not enough patients making appointments (<strong>37%</strong>), and trouble filling vacant staff positions (<strong>27%</strong>).<sup><a href="#fn2">2</a></sup></p>
-      <p class="stand">Your lab and workflow shouldn’t contribute to these causes.</p>
+    <div class="wrap wide intro">
+      <p class="kicker">Dental Practice Production/Revenue Loss Calculator</p>
+      <h1>What is lost chair time costing your practice?</h1>
+      <p class="subhead">Estimate your annual loss from remakes, adjustments, and turnaround, using national and state averages.</p>
       <a class="btn btn-accent btn-lg" href="#calculator">Calculate your practice’s loss</a>
     </div>
   </section>
 
-  <section id="calculator">
-    <div class="wrap">
-      <div class="grid4">
-        <div>
-          <label for="zip">State or ZIP</label>
-          <div class="combo">
-            <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP" aria-describedby="zipStatus">
-            <select id="statePick" aria-label="State"></select>
-          </div>
-        </div>
-        <div>
-          <label for="operatories">Operatories</label>
-          <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
-        </div>
-        <div>
-          <label for="providers">Providers</label>
-          <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
-        </div>
-        <div>
-          <label for="staffSize">Staff size</label>
-          <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
-        </div>
-      </div>
-      <p class="status" id="zipStatus" role="status">5-digit ZIP, or pick a state.</p>
-      <p class="hint">Assumption — enter your own.</p>
+  <section class="facts" aria-label="Survey findings">
+    <div class="wrap wide">
+      <ul class="tiles">
+        <li>
+          <b>19%</b>
+          <span>of hygienists changed employers in the past year<sup><a href="#fn1">1</a></sup></span>
+        </li>
+        <li>
+          <b>82%</b>
+          <span>of dentists lost schedule time to late cancellations and no-shows<sup><a href="#fn2">2</a></sup></span>
+        </li>
+        <li>
+          <b>27%</b>
+          <span>struggled to fill open staff positions<sup><a href="#fn2">2</a></sup></span>
+        </li>
+      </ul>
+      <p class="stand">Your lab and workflow shouldn’t contribute to these causes.</p>
+    </div>
+  </section>
 
-      <div class="result" id="result" aria-live="polite">
-        <div class="lbl">Estimated loss per year</div>
-        <div class="big" id="outAnnual">$0</div>
-        <p class="hours" id="outCrowns">0 hours lost</p>
-        <div class="rows" id="rows"></div>
-        <div class="gain" id="outProdGap">
-          <p class="lbl">Production lost</p>
-          <div class="gain-cols">
+  <section id="calculator">
+    <div class="wrap wide">
+      <div class="panel">
+        <div class="calc">
+          <div class="inputs">
             <div>
-              <span>Now</span>
-              <b id="nowProd">$0</b>
+              <label for="zip">State or ZIP</label>
+              <div class="combo">
+                <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP" aria-describedby="zipStatus">
+                <select id="statePick" aria-label="State"></select>
+              </div>
             </div>
             <div>
-              <span>With fewer remakes</span>
-              <b id="scProd">$0</b>
+              <label for="operatories">Operatories</label>
+              <div class="stepper">
+                <button type="button" class="step" data-step="operatories" data-dir="-1" aria-label="Fewer operatories">−</button>
+                <input id="operatories" data-field="operatories" type="number" min="1" max="40" step="1" value="4" inputmode="numeric">
+                <button type="button" class="step" data-step="operatories" data-dir="1" aria-label="More operatories">+</button>
+              </div>
             </div>
+            <div>
+              <label for="providers">Providers</label>
+              <div class="stepper">
+                <button type="button" class="step" data-step="providers" data-dir="-1" aria-label="Fewer providers">−</button>
+                <input id="providers" data-field="providers" type="number" min="1" max="40" step="1" value="2" inputmode="numeric">
+                <button type="button" class="step" data-step="providers" data-dir="1" aria-label="More providers">+</button>
+              </div>
+            </div>
+            <div>
+              <label for="staffSize">Staff size</label>
+              <div class="stepper">
+                <button type="button" class="step" data-step="staffSize" data-dir="-1" aria-label="Fewer staff">−</button>
+                <input id="staffSize" data-field="staffSize" type="number" min="0" max="80" step="1" value="3" inputmode="numeric">
+                <button type="button" class="step" data-step="staffSize" data-dir="1" aria-label="More staff">+</button>
+              </div>
+            </div>
+            <p class="status" id="zipStatus" role="status">5-digit ZIP, or pick a state.</p>
+            <p class="hint">Assumption — enter your own.</p>
+          </div>
+
+          <div class="result" id="result">
+            <div class="lbl">Estimated loss per year</div>
+            <div class="big" id="outAnnual">$0</div>
+            <div class="substats">
+              <p><b id="outMonth">$0</b> <span>per month</span></p>
+              <p><b id="outCrowns">0</b> <span>hours lost</span></p>
+            </div>
+            <div class="rows" id="rows"></div>
+            <div class="hbar" id="outProdGap">
+              <div class="hbar-row">
+                <span>Now</span>
+                <div class="track"><i id="barNow"></i></div>
+                <b id="nowProd">$0</b>
+              </div>
+              <div class="hbar-row">
+                <span>With fewer remakes</span>
+                <div class="track"><i id="barSc"></i></div>
+                <b id="scProd">$0</b>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="text-btn" id="copyResults">Copy results</button>
+              <button type="button" class="text-btn" id="printResults">Print / save as PDF</button>
+            </div>
+            <p class="status" id="copyStatus" role="status"></p>
+            <p class="quiet" id="outRegion"></p>
+            <p class="quiet" id="outVisitNote"></p>
+            <p class="sr" id="liveTotal" aria-live="polite"></p>
+            <p class="quiet" id="outDayLine" hidden></p>
+            <p class="quiet" id="outMonthLine" hidden></p>
           </div>
         </div>
-        <p class="quiet" id="outRegion"></p>
-        <p class="quiet" id="outVisitNote"></p>
-        <p class="quiet" id="outDayLine" hidden></p>
-        <p class="quiet" id="outMonthLine" hidden></p>
       </div>
     </div>
   </section>
@@ -389,7 +439,7 @@
             <input id="targetStaffHrs" data-field="targetStaffHrs" type="number" min="0" max="10" step="0.25" value="0.5">
           </div>
           <div>
-            <label>Chair hours per remake</label>
+            <label for="remakeHoursEcho">Chair hours per remake</label>
             <input id="remakeHoursEcho" type="text" readonly value="1.5" aria-readonly="true">
             <p class="hint">Edited under Your area.</p>
           </div>
@@ -456,13 +506,17 @@
   </div>
   <p class="footnote">
     <span id="fn1"><sup>1</sup> DentalPost, 2024 Dental Hygienist Salary Survey, fielded July–October 2023, 1,802 registered dental hygienists. 19.35% changed employers in the previous 12 months. <a href="https://www.dental-post.com/hubfs/salarysurvey2024/ss2024-dentalhygienist.pdf">Survey PDF</a>.</span>
-    <span id="fn2"><sup>2</sup> ADA Health Policy Institute, Economic Outlook and Emerging Issues in Dentistry, December 2023. 923 dentists, December 11–17, 2023. Question: which factors prevented the appointment schedule from reaching 100% last week. <a href="https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/dec2023_hpi_economic_outlook_dentistry_slides.pdf">Slides</a>. A 2017 ranking of the top causes of lost production was not used; this poll is the verified source.</span>
+    <span id="fn2"><sup>2</sup> ADA Health Policy Institute, Economic Outlook and Emerging Issues in Dentistry, December 2023. 923 dentists, December 11–17, 2023. Question: which factors prevented the appointment schedule from reaching 100% last week. The reasons were no-shows or cancellations with less than 24 hours’ notice (82%), cancellations with more than 24 hours’ notice (51%), not enough patients making appointments (37%), and trouble filling vacant staff positions (27%). <a href="https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/dec2023_hpi_economic_outlook_dentistry_slides.pdf">Slides</a>. A 2017 ranking of the top causes of lost production was not used; this poll is the verified source.</span>
     <span id="fn3"><sup>3</sup> The annual total is chair time priced at gross billings per practice hour, plus staff wages for that time. ADA gross billings already include overhead, so adding the 57.62% share again would count it twice. The line “of which, overhead that still had to be paid” is that share of the lost production. It is not part of the total. Staff wages are added because the billings figure is production, not the wage paid to assistants and receptionists for those hours.</span>
     <span>Averages used in the calculator: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2024 state estimates and Offices of Dentists industry estimates; ADA Health Policy Institute, Survey of Dental Practice (2025 results); GeoNames postal codes for ZIP-to-state. Figures are estimates. Assumptions are yours to edit.</span>
   </p>
 </footer>
 
 <noscript><p class="wrap">This estimate needs JavaScript. The page is still a single file you can open locally once JavaScript is available.</p></noscript>
+<div class="sticky-total" id="stickyTotal">
+  <span>Estimated loss per year</span>
+  <b id="stickyAnnual">$0</b>
+</div>
 <script src="js/data.js"></script>
 <script src="js/zips.js"></script>
 <script src="js/model.js"></script>
