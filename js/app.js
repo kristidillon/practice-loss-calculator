@@ -246,6 +246,11 @@
       state.units = derivedUnits();
       sync("units");
     }
+    if (!state.touched.remakesPerMonth && document.activeElement !== $("remakesPerMonth")) {
+      var caseCount = Math.max(0, num(state.fixedCases)) + Math.max(0, num(state.removableCases));
+      state.remakesPerMonth = Math.round(caseCount * Math.max(0, num(state.remakePct)) / 100);
+      sync("remakesPerMonth");
+    }
     state.unitsTouched = !!state.touched.units;
     var est = estimateNow();
     var estSc = estimateScenario();
@@ -262,8 +267,8 @@
     $("wagePlace").textContent = rec.name;
     $("staffRate").textContent = wageText((num(rec.assistant) + num(rec.receptionist)) / 2);
     $("staffNote").textContent = rec.receptionistFromNational && !rec.national
-      ? "Assistant wage for this state. Receptionist uses the U.S. mean. Wages only, before benefits."
-      : "Assistant and receptionist average. Wages only, BLS May 2024, before benefits.";
+      ? "staff cost per hour. Receptionist uses the U.S. mean. Wages only, before benefits."
+      : "staff cost per hour. Wages only, before benefits.";
     animateAnnual(Math.round(est.chairDollars) + Math.round(est.staffDollars) + Math.round(est.otherDollars));
 
     if (document.activeElement !== $("productionPerDay")) {
@@ -351,6 +356,13 @@
         : "About " + money(-diff) + " more per year in this scenario.");
     $("nowProd").textContent = money(est.chairDollars);
     $("scProd").textContent = money(estSc.chairDollars);
+    var recoverGap = Math.round(est.chairDollars) - Math.round(estSc.chairDollars);
+    var recover = $("outRecover");
+    if (recover) {
+      if (recoverGap > 0) recover.textContent = "Production you could recover: " + money(recoverGap) + "/yr";
+      else if (recoverGap < 0) recover.textContent = "This comparison shows " + money(-recoverGap) + "/yr more production lost.";
+      else recover.textContent = "This comparison matches current production.";
+    }
     var barScale = Math.max(est.chairDollars, estSc.chairDollars, 1);
     $("barNow").style.width = (est.chairDollars / barScale * 100) + "%";
     $("barSc").style.width = (estSc.chairDollars / barScale * 100) + "%";
@@ -432,62 +444,6 @@
     });
   }
 
-  function status(message, bad) {
-    var node = $("zipStatus");
-    node.textContent = message;
-    node.classList.toggle("bad", !!bad);
-  }
-
-  function showScreen(which) {
-    var gate = $("screen1");
-    var app = $("screen2");
-    var enter = which === 2 ? app : gate;
-    var leave = which === 2 ? gate : app;
-    if (reduced) {
-      leave.hidden = true;
-      enter.hidden = false;
-      if (which === 1) $("zip").focus();
-      else window.scrollTo(0, 0);
-      return;
-    }
-    leave.classList.add("is-leaving");
-    window.setTimeout(function () {
-      leave.hidden = true;
-      leave.classList.remove("is-leaving");
-      enter.hidden = false;
-      if (which === 1) $("zip").focus();
-      else window.scrollTo(0, 0);
-    }, 180);
-  }
-
-  function openFromZip(raw) {
-    var digits = String(raw || "").replace(/\D/g, "").slice(0, 5);
-    $("zip").value = digits;
-    if (digits.length !== 5) {
-      status("Enter a 5-digit ZIP code.", true);
-      return false;
-    }
-    var found = lookupZip(digits);
-    if (found.error) {
-      status(found.error, true);
-      return false;
-    }
-    applyRegion(found.code, found.zip);
-    status("");
-    showScreen(2);
-    return true;
-  }
-
-  $("zip").addEventListener("input", function () {
-    $("zip").value = $("zip").value.replace(/\D/g, "").slice(0, 5);
-    status("");
-  });
-  $("continueZip").addEventListener("click", function () { openFromZip($("zip").value); });
-  $("zip").addEventListener("keydown", function (event) {
-    if (event.key === "Enter") { event.preventDefault(); openFromZip($("zip").value); }
-  });
-  $("changeZip").addEventListener("click", function () { showScreen(1); });
-
   document.body.addEventListener("input", function (event) {
     if (event.target && event.target.dataset && event.target.dataset.field) onField(event.target);
   });
@@ -544,7 +500,8 @@
       $("outPace").textContent,
       rows,
       "Production lost now: " + $("nowProd").textContent,
-      "With fewer remakes: " + $("scProd").textContent
+      "With fewer remakes: " + $("scProd").textContent,
+      $("outRecover") ? $("outRecover").textContent : ""
     ].join("\n");
   }
   function markCopied() { $("copyStatus").textContent = "Copied."; }
@@ -574,11 +531,19 @@
     stickyWatch.observe($("result"));
   }
 
+  var params = new URLSearchParams(window.location.search);
+  var initialZip = (params.get("zip") || "").replace(/\D/g, "").slice(0, 5);
+  var found = initialZip.length === 5 ? lookupZip(initialZip) : { error: "missing" };
+  if (found.error) {
+    var back = "index.html" + (initialZip ? "?zip=" + initialZip + "&invalid=1" : "");
+    window.location.replace(back);
+    return;
+  }
+
   fillStates();
   applyWages();
   syncAll();
-  paint();
-
-  var params = new URLSearchParams(window.location.search);
-  if (params.get("zip")) openFromZip(params.get("zip"));
+  applyRegion(found.code, found.zip);
+  var change = $("changeZip");
+  if (change) change.setAttribute("href", "index.html?zip=" + found.zip);
 })();

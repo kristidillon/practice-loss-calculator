@@ -7,13 +7,13 @@ The page is a general information tool. It has no email link, no meeting link, a
 ## Use it
 
 1. Open `index.html` in a browser, or the GitHub Pages URL after the steps below.
-2. Enter a 5-digit U.S. ZIP and continue. State wages fill in from BLS May 2024. You can edit every figure.
+2. Enter a 5-digit U.S. ZIP on the opening page and continue. That opens `calculator.html?zip=` in the same tab. State wages fill in from BLS May 2024. You can edit every figure.
 3. Enter office size, monthly fixed and removable cases, turnaround, adjustment minutes, and remakes. The annual estimate updates as you type. Case counts replace the old 25-units-per-chair starting point. Remakes are a count, not a percent.
 4. Open **Fine-tune** to edit production, wages, the separate removable adjustment minutes and remake chair time, overhead, lab fee, and the comparison.
 5. The “With fewer remakes” bar uses the comparison remake count, adjustment minutes, and turnaround inside Fine-tune.
 6. The one-case comparison lower on the page uses the original gap formula (chair time and chasing hours only).
 
-`index.html?zip=10001` opens with that ZIP already applied.
+`calculator.html?zip=10001` opens that ZIP. A missing or unknown ZIP returns to `index.html`.
 
 There is no build step and no server. Scripts are plain files so the page works from `file://` as well as from GitHub Pages. Do not rename the `js/` or `css/` folders without updating the paths in `index.html`.
 
@@ -93,7 +93,7 @@ These are not the starting values. Buttons on the page apply them.
 - McCracken et al., *Journal of Prosthodontics* 28(2):122–130, published online November 22, 2018. Of 3,731 single-unit crowns that reached try-in, 141 (**3.8%**) were rejected. 205 dentists in the National Dental Practice-Based Research Network. [doi:10.1111/jopr.12995](https://doi.org/10.1111/jopr.12995).
 - McCracken et al., *Journal of the American Dental Association* 2017;148(11):788–796.e4. Self-reported mean of **18 crowns a month**. Most respondents (59%) reported a remake rate under 2%, and 17% reported a rate over 4%. That is a questionnaire, separate from the 3.8% try-in study. [PMC5793929](https://pmc.ncbi.nlm.nih.gov/articles/PMC5793929/).
 
-The remake field starts at **8%** and units at **25** because those are the one-case calculator’s starting values. The one-case page’s line about a 5–10% industry average is not repeated here; this page did not find a public source for that range.
+The remake field starts at **3.8%**, the single-unit crown remake rate in McCracken et al. The monthly remake count starts at that rate times the cases you send, rounded. Units per chair still start at **25** only as the one-case calculator’s unsourced starting value. The one-case page’s line about a 5–10% industry average is not repeated here; this page did not find a public source for that range.
 
 ### ZIP codes
 
